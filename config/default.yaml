@@ -1,0 +1,47 @@
+# Global CL-ANM default configuration
+seed: 42
+seeds:
+  train: [42, 101, 202, 303, 404]
+  eval: [1001, 1002, 1003, 1004, 1005]
+  unseen: [9001, 9002, 9003]
+
+episode:
+  duration_s: 90
+  warmup_s: 20
+  fault_onset_s: 20
+  observation_window_s: 10
+  telemetry_interval_s: 1.0
+
+thresholds:
+  confidence_tau_c: 0.75
+  verifier_risk_tau_r: 0.30
+  recovery_kpi_ratio: 0.95
+  recovery_consecutive_s: 5
+  utilization_high_watermark: 0.80
+
+debate:
+  max_rounds: 2
+  roles: ["Proposer", "Critic", "Security", "Safety"]
+
+ppo:
+  hidden_dim: 64
+  learning_rate: 0.0003
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  k_shortest_paths: 3
+  reward_weights:
+    alpha_rec: 1.0
+    beta_delay: 0.3
+    gamma_loss: 0.5
+    delta_util: 0.2
+    epsilon_churn: 0.1
+
+paths:
+  runs_csv: "results/raw/runs.csv"
+  llm_cache: "results/checkpoints/llm_cache.json"
+  detector_model: "results/checkpoints/detector.pkl"
+  ppo_model: "results/checkpoints/ppo_model.zip"
+  figures_dir: "results/figures"
+  tables_dir: "results/tables"
+

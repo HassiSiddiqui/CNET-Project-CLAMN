@@ -1,0 +1,35 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+.coverage
+htmlcov/
+
+# Raw large experiment outputs (keep summaries, ignore giant scratch logs)
+results/logs/
+results/checkpoints/llm_cache.json
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Windows / Temporary scratch
+*.tmp
+read_phase1.py
+check_install.sh
+install_all.sh
+
+# Environment secrets
+.env
+

@@ -1,0 +1,16 @@
+\begin{table}
+\caption{Comparison with published literature (preliminary; N=2 dry run).}
+\label{tab:literature}
+\begin{tabular}{lllrrr}
+\toprule
+paper & metric & config & our_value & ref_value & delta \\
+\midrule
+Makiyah et al. & packet_loss_pct & B0 & 2.467 & 18.400 & -15.933 \\
+Makiyah et al. & packet_loss_pct & B2 & 2.709 & 9.700 & -6.991 \\
+Makiyah et al. & packet_loss_pct & FULL & 2.709 & 3.200 & -0.491 \\
+Mwangi et al. (OMARF) & latency_reduction_pct & FULL vs B0 & 0.000 & 28.300 & -28.300 \\
+Mwangi et al. (OMARF) & throughput_recovery_improvement_pct & FULL vs B0 & 80.740 & 23.000 & 57.740 \\
+Lira et al. & slm_eval & pending & NaN & NaN & NaN \\
+\bottomrule
+\end{tabular}
+\end{table}

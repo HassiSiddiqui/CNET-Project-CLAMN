@@ -1,0 +1,8 @@
+metric,test,stat,p
+latency_p50_ms,Kruskal-Wallis,0.0,1.0
+latency_p95_ms,Kruskal-Wallis,0.0,1.0
+throughput_recovery_s,Kruskal-Wallis,1228.9740802675599,8.097306368985927e-258
+mttr_s,Kruskal-Wallis,0.0,1.0
+packet_loss_pct,Kruskal-Wallis,11.740773894316215,0.30278014516661844
+availability_pct,Kruskal-Wallis,1228.0509884292674,1.2808086482343632e-257
+kaplan_meier,,,

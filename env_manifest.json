@@ -1,0 +1,34 @@
+{
+  "system": {
+    "os": "Ubuntu 26.04 (WSL2)",
+    "host_os": "Windows 11",
+    "kernel": "Linux 6.6-wsl2",
+    "python_version": "3.11.18",
+    "global_seed": 42
+  },
+  "hardware": {
+    "target_gpu": "AMD Radeon RX 580 2048SP",
+    "vram_total_gb": 8.0,
+    "vram_usable_gb": 7.4,
+    "architecture": "Polaris",
+    "cuda_available": false,
+    "pytorch_device": "cpu / torch_directml",
+    "llm_engine": "llama.cpp Vulkan (Vulkan0) / Groq Cloud API"
+  },
+  "networking": {
+    "mininet_version": "2.3.0",
+    "ovs_version": "3.7.1",
+    "openflow_version": "OpenFlow 1.3",
+    "dialects": ["ovs-ofctl", "ryu-rest", "frr-vtysh"]
+  },
+  "ml_stack": {
+    "pytorch_version": "2.x",
+    "gymnasium_version": "1.x",
+    "stable_baselines3_version": "2.x",
+    "xgboost_version": "3.x",
+    "scikit_learn_version": "1.6.x",
+    "sentence_transformers_version": "3.x",
+    "drain3_version": "0.9.11"
+  }
+}
+

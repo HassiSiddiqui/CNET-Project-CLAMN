@@ -1,0 +1,32 @@
+ppo:
+  policy: "MlpPolicy"
+  learning_rate: 3.0e-4
+  n_steps: 128
+  batch_size: 32
+  n_epochs: 10
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  total_timesteps: 50000
+
+graph_encoder:
+  embedding_dim: 64
+  num_layers: 2
+  conv_type: "GraphSAGE"
+  pooling: "mean"
+  dropout: 0.1
+
+reward:
+  alpha_rec: 1.0
+  beta_delay: 0.3
+  gamma_loss: 0.5
+  delta_util: 0.2
+  epsilon_churn: 0.1
+
+ood_guard:
+  mahalanobis_threshold: 4.5
+  fallback_action: "shortest_path"
+

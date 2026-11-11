@@ -1,0 +1,55 @@
+topologies:
+  T1_tree:
+    name: "T1_tree"
+    description: "Binary tree with 3 switches (s1 root, s2-s3 aggregate) and 4 hosts"
+    num_switches: 3
+    num_hosts: 4
+    default_capacity_mbps: 100
+    default_delay_ms: 2
+    switches: ["s1", "s2", "s3"]
+    hosts: ["h1", "h2", "h3", "h4"]
+    switch_links:
+      - [s1, s2, 100, 2, 0.999]
+      - [s1, s3, 100, 2, 0.999]
+    host_links:
+      - [h1, s2, 100, 1, 0.999]
+      - [h2, s2, 100, 1, 0.999]
+      - [h3, s3, 100, 1, 0.999]
+      - [h4, s3, 100, 1, 0.999]
+
+  T2_abilene:
+    name: "T2_abilene"
+    description: "Abilene network (Internet2 backbone, 11 switches, 14 bi-directional links)"
+    num_switches: 11
+    num_hosts: 11
+    default_capacity_mbps: 1000
+    default_delay_ms: 5
+    switches: ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11"]
+    switch_links:
+      - [s1, s2, 1000, 5, 0.999]
+      - [s1, s3, 1000, 7, 0.999]
+      - [s2, s4, 1000, 4, 0.999]
+      - [s3, s5, 1000, 6, 0.999]
+      - [s4, s6, 1000, 5, 0.999]
+      - [s4, s7, 1000, 8, 0.999]
+      - [s5, s7, 1000, 6, 0.999]
+      - [s5, s8, 1000, 9, 0.999]
+      - [s6, s9, 1000, 5, 0.999]
+      - [s7, s10, 1000, 7, 0.999]
+      - [s8, s11, 1000, 8, 0.999]
+      - [s9, s10, 1000, 4, 0.999]
+      - [s10, s11, 1000, 6, 0.999]
+      - [s2, s3, 1000, 3, 0.999]
+
+  T3_fattree:
+    name: "T3_fattree"
+    description: "k=4 Fat-Tree topology (4 core, 8 aggregate, 8 edge switches; 16 hosts)"
+    k: 4
+    num_core: 4
+    num_agg: 8
+    num_edge: 8
+    num_switches: 20
+    num_hosts: 16
+    default_capacity_mbps: 1000
+    default_delay_ms: 1
+

@@ -1,0 +1,46 @@
+scenarios:
+  S1_link_failure:
+    name: "S1_link_failure"
+    modes: ["hard", "flapping", "degraded"]
+    default_onset_s: 20
+    default_clearance_s: 70
+    severities:
+      hard: { packet_loss_pct: 100 }
+      flapping: { period_s: 4, duty_cycle: 0.5 }
+      degraded: { delay_ms: 50, jitter_ms: 15, loss_pct: 25 }
+
+  S2_ddos:
+    name: "S2_ddos"
+    modes: ["udp_flood", "syn_flood"]
+    default_onset_s: 20
+    default_clearance_s: 70
+    intensities:
+      low: { rate_pps: 1000, bandwidth_mbps: 10 }
+      medium: { rate_pps: 5000, bandwidth_mbps: 50 }
+      high: { rate_pps: 15000, bandwidth_mbps: 100 }
+
+  S3_misconfig:
+    name: "S3_misconfig"
+    modes: ["wrong_next_hop", "broad_acl", "mtu_mismatch", "missing_route"]
+    default_onset_s: 20
+    default_clearance_s: 70
+    severities:
+      wrong_next_hop: { drop_traffic: true }
+      broad_acl: { block_subnet: "10.0.0.0/24" }
+      mtu_mismatch: { mtu_bytes: 576 }
+      missing_route: { blackhole: true }
+
+  S4_cascading:
+    name: "S4_cascading"
+    modes: ["primary_fail_backup_overload"]
+    default_onset_s: 20
+    backup_fail_onset_s: 35
+    default_clearance_s: 70
+
+  S5_ddos_and_link_failure:
+    name: "S5_ddos_and_link_failure"
+    modes: ["combined"]
+    link_onset_s: 20
+    ddos_onset_s: 25
+    default_clearance_s: 70
+
