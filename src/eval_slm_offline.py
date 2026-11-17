@@ -109,12 +109,12 @@ def clean_json(raw: str) -> dict | None:
             except Exception: pass
         return None
 
-def evaluate():
+def evaluate(n_per_class=20, model_label="Qwen2.5-Coder-7B"):
     print(f"Loading {TEST_FILE}...")
     with open(TEST_FILE, "r", encoding="utf-8") as f:
         all_samples = [json.loads(line) for line in f]
 
-    # Stratified subsampling: 60 per class = 300 total
+    # Stratified subsampling: n_per_class per class
     by_class = {}
     for s in all_samples:
         by_class.setdefault(s["intent_class"], []).append(s)
@@ -123,9 +123,9 @@ def evaluate():
     selected = []
     for cls_name, samples in sorted(by_class.items()):
         rng.shuffle(samples)
-        selected.extend(samples[:60])
+        selected.extend(samples[:n_per_class])
 
-    print(f"Evaluating {len(selected)} samples against Vulkan SLM at http://127.0.0.1:8080...")
+    print(f"Evaluating {len(selected)} samples against Vulkan SLM ({model_label}) at {SERVER_URL}...")
     rows = []
     t_start = time.time()
 
@@ -255,6 +255,7 @@ def evaluate():
 
     # Save JSON summary metrics
     metrics = {
+        "model": model_label,
         "n_samples": len(df),
         "measured_p_diag": measured_p_diag,
         "measured_p_hal": measured_p_hal,
@@ -269,8 +270,92 @@ def evaluate():
     with open(f"{OUT_DIR}/slm_metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
 
+    # Comparative scaling ablation study (Llama-3.2-3B vs Qwen2.5-Coder-7B)
+    llama_path = f"{OUT_DIR}/slm_metrics_llama3b.json"
+    if os.path.exists(llama_path):
+        with open(llama_path) as f:
+            llama_m = json.load(f)
+
+        ablation_rows = [
+            {
+                "Evaluation Metric": "Parameter Scale",
+                "Llama-3.2-3B-Instruct (Ablation)": "3.2 Billion (Q4_K_M, 2.0GB)",
+                "Qwen2.5-Coder-7B-Instruct (Proposed)": "7.6 Billion (Q4_K_M, 4.7GB)",
+                "Relative Gain / Impact": "+138% Parameters"
+            },
+            {
+                "Evaluation Metric": "JSON Syntax Validity (\\%)",
+                "Llama-3.2-3B-Instruct (Ablation)": f"{llama_m['measured_syntax']*100:.1f}",
+                "Qwen2.5-Coder-7B-Instruct (Proposed)": f"{measured_syntax*100:.1f}",
+                "Relative Gain / Impact": f"{(measured_syntax - llama_m['measured_syntax'])*100:+.1f}\\%"
+            },
+            {
+                "Evaluation Metric": "Schema Compliance (\\%)",
+                "Llama-3.2-3B-Instruct (Ablation)": f"{llama_m['measured_schema']*100:.1f}",
+                "Qwen2.5-Coder-7B-Instruct (Proposed)": f"{measured_schema*100:.1f}",
+                "Relative Gain / Impact": f"{(measured_schema - llama_m['measured_schema'])*100:+.1f}\\%"
+            },
+            {
+                "Evaluation Metric": "Diagnostic Accuracy $p_{\\text{diag}}$ (\\%)",
+                "Llama-3.2-3B-Instruct (Ablation)": f"{llama_m['measured_p_diag']*100:.1f}",
+                "Qwen2.5-Coder-7B-Instruct (Proposed)": f"{measured_p_diag*100:.1f}",
+                "Relative Gain / Impact": f"{(measured_p_diag - llama_m['measured_p_diag'])*100:+.1f}\\%"
+            },
+            {
+                "Evaluation Metric": "Hallucination Rate $p_{\\text{hal}}$ (\\%)",
+                "Llama-3.2-3B-Instruct (Ablation)": f"{llama_m['measured_p_hal']*100:.1f}",
+                "Qwen2.5-Coder-7B-Instruct (Proposed)": f"{measured_p_hal*100:.1f}",
+                "Relative Gain / Impact": f"{(measured_p_hal - llama_m['measured_p_hal'])*100:+.1f}\\%"
+            },
+            {
+                "Evaluation Metric": "Adversarial Rejection Rate (\\%)",
+                "Llama-3.2-3B-Instruct (Ablation)": f"{llama_m['measured_neg_reject']*100:.1f}",
+                "Qwen2.5-Coder-7B-Instruct (Proposed)": f"{measured_neg_reject*100:.1f}",
+                "Relative Gain / Impact": f"{(measured_neg_reject - llama_m['measured_neg_reject'])*100:+.1f}\\%"
+            },
+            {
+                "Evaluation Metric": "Mean Inference Latency (ms)",
+                "Llama-3.2-3B-Instruct (Ablation)": f"{llama_m['mean_latency_ms']:.1f}",
+                "Qwen2.5-Coder-7B-Instruct (Proposed)": f"{mean_lat_ms:.1f}",
+                "Relative Gain / Impact": f"+{(mean_lat_ms - llama_m['mean_latency_ms']):.1f} ms"
+            }
+        ]
+        df_ab = pd.DataFrame(ablation_rows)
+        df_ab.to_csv(f"{TB_DIR}/slm_ablation_scaling.csv", index=False)
+        df_ab.to_latex(f"{TB_DIR}/slm_ablation_scaling.tex", index=False, escape=False)
+        print("\nModel Scaling Ablation Study (Llama-3B vs Qwen-7B):")
+        print(df_ab.to_string(index=False))
+
+        # Generate comparative bar chart
+        import matplotlib; matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        plt.rcParams.update({"font.family": "serif", "font.size": 8, "axes.grid": True, "grid.alpha": .3, "figure.dpi": 150})
+        fig, ax = plt.subplots(figsize=(6, 3))
+        comp_metrics = ["Syntax (%)", "Schema (%)", "Accuracy (%)", "Hallucination (%)", "Rejection (%)"]
+        l_vals = [llama_m['measured_syntax']*100, llama_m['measured_schema']*100, llama_m['measured_p_diag']*100, llama_m['measured_p_hal']*100, llama_m['measured_neg_reject']*100]
+        q_vals = [measured_syntax*100, measured_schema*100, measured_p_diag*100, measured_p_hal*100, measured_neg_reject*100]
+        x = np.arange(len(comp_metrics)); w = 0.35
+        b1 = ax.bar(x - w/2, l_vals, w, label="Llama-3.2-3B (Ablation)", color="#4878cf")
+        b2 = ax.bar(x + w/2, q_vals, w, label="Qwen2.5-Coder-7B (Proposed)", color="#6acc65")
+        ax.set_xticks(x); ax.set_xticklabels(comp_metrics, fontsize=7)
+        ax.set_ylabel("Percentage (%)"); ax.set_ylim(0, 115)
+        ax.legend(fontsize=7); ax.set_title("SLM Scaling Ablation: 3B vs 7B on Intent Benchmark", fontsize=8)
+        for bar in list(b1) + list(b2):
+            ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1, f"{bar.get_height():.1f}", ha="center", va="bottom", fontsize=6)
+        plt.tight_layout()
+        os.makedirs("results/mn/figures", exist_ok=True)
+        plt.savefig("results/mn/figures/fig_slm_scaling_ablation.pdf")
+        plt.savefig("results/mn/figures/fig_slm_scaling_ablation.png", dpi=200)
+        plt.close()
+        print("Saved fig_slm_scaling_ablation")
+
     print("\nSLM Offline Evaluation Complete!")
     print(df_summ.to_string(index=False))
 
 if __name__ == "__main__":
-    evaluate()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--n-per-class", type=int, default=20, help="Number of samples per intent class (default: 20 -> 100 total)")
+    ap.add_argument("--model-name", default="Qwen2.5-Coder-7B", help="Model display name")
+    args = ap.parse_args()
+    evaluate(n_per_class=args.n_per_class, model_label=args.model_name)

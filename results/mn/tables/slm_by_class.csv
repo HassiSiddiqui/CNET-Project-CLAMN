@@ -1,6 +1,6 @@
 Intent Class,Count,Syntax (\%),Schema (\%),Accuracy (\%),Hallucination (\%),Latency (ms)
-qos,60,90.0,90.0,48.3,1.7,3664.6
-rate_limit_isolation,60,98.3,98.3,43.3,38.3,3595.2
-reachability,60,96.7,96.7,71.7,13.3,4188.6
-routing_policy,60,90.0,90.0,31.7,51.7,5362.3
-security,60,86.7,86.7,35.0,10.0,4000.3
+qos,20,100.0,95.0,15.0,0.0,5538.7
+rate_limit_isolation,20,100.0,100.0,60.0,0.0,7552.2
+reachability,20,100.0,100.0,10.0,0.0,5070.5
+routing_policy,20,100.0,95.0,25.0,0.0,7045.2
+security,20,100.0,100.0,10.0,0.0,5613.5

@@ -1,0 +1,1869 @@
+id,intent_class,topology,is_negative,syntax_ok,schema_ok,hallucination,diag_ok,confidence,latency_s,raw_output
+INTENT-007679,qos,T3_fattree,0,1,1,0,1,0.8,10.771,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 50 Mbps throughput from h3 to h4 - Insufficient bandwidth on h3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""h3"", ""params"": {""rate"": ""50"", ""burst"": ""100""}}
+  ]
+}"
+INTENT-007320,qos,T1_tree,1,1,1,0,0,0.8,3.585,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 100 Mbps throughput from h4 to h1 - Insufficient bandwidth on h4"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""h4"", ""params"": {""priority"": 100}}
+  ]
+}"
+INTENT-001435,qos,T3_fattree,0,1,1,0,0,0.95,2.638,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 50 Mbps for flows from h4 to h2 is not feasible due to lack of available bandwidth"",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-007483,qos,T3_fattree,0,1,1,0,1,0.8,3.905,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 100 Mbps throughput from h3 to h1 - Insufficient bandwidth on h3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""h3"", ""params"": {""rate"": ""1000000000"", ""burst"": ""100000000""}}
+  ]
+}"
+INTENT-006694,qos,T1_tree,0,1,1,0,1,0.8,6.966,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h3 is feasible but requires additional configuration on s3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s3"", ""params"": {""config"": ""default""}},
+    {""type"": ""acl_add"","
+INTENT-000746,qos,T3_fattree,0,1,1,0,0,0.95,2.949,"{
+  ""fault_hypothesis"": ""No dedicated queue can be allocated on switch s1 for traffic to 10.0.0.3 with 100 Mbps capacity due to lack of available hosts."",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-006968,qos,T1_tree,0,1,1,0,1,0.8,3.25,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 100 Mbps throughput from h3 to h4 - Insufficient bandwidth on h3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""h3"", ""params"": {""priority"": 100}}
+  ]
+}"
+INTENT-001461,qos,T2_abilene,1,1,1,0,1,0.0,2.268,"{
+  ""fault_hypothesis"": ""Unable to find switch s2 in available switches"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-003849,qos,T3_fattree,0,1,1,1,0,0.8,4.337,"{
+  ""fault_hypothesis"": ""Guaranteeing minimum bandwidth of 25 Mbps for flows from h2 to h1 may not be feasible due to the current loss rate of 0.0 on port s1-eth2, which indicates no packet loss."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s1-eth2"", ""params"": {""bandwidth"": "
+INTENT-007103,qos,T2_abilene,0,1,1,0,0,0.0,2.553,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 10 Mbps throughput from h3 to h1"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-004157,qos,T3_fattree,0,1,1,0,0,0.95,2.786,"{
+  ""fault_hypothesis"": ""No dedicated queue can be allocated on switch s2 for traffic to 10.0.0.3 with 10 Mbps capacity due to lack of available hosts."",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-007209,qos,T2_abilene,0,1,1,0,0,0.0,2.582,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 25 Mbps throughput from h3 to h1"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006657,qos,T2_abilene,0,1,1,0,0,0.0,2.327,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h1"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-004399,qos,T2_abilene,0,1,1,0,0,0.0,2.451,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 10 Mbps for flows from h3 to h4"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-003686,qos,T3_fattree,0,1,1,0,1,0.8,4.084,"{
+  ""fault_hypothesis"": ""Guaranteeing minimum bandwidth of 50 Mbps for flows from h2 to h1 may not be feasible due to the current network topology and available bandwidth."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h2"", """
+INTENT-000775,qos,T1_tree,0,1,1,0,1,0.8,3.679,"{
+  ""fault_hypothesis"": ""Guaranteeing minimum bandwidth of 50 Mbps for flows from h3 to h2 may not be feasible due to the current loss rate of 0.0 on port s2-eth3, which indicates no packet loss."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-001656,qos,T2_abilene,0,1,1,0,0,0.0,2.331,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h2"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007029,qos,T3_fattree,0,1,1,0,1,0.8,3.536,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 10 Mbps throughput from h3 to h1 - Insufficient bandwidth on h3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""h3"", ""params"": {""rate"": ""10Mbps""}}
+  ]
+}"
+INTENT-006949,qos,T3_fattree,0,1,1,0,1,0.8,3.421,"{
+  ""fault_hypothesis"": ""Insufficient bandwidth reserve on link h3-h2"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""h3"", ""params"": {""acl_name"": ""bandwidth_reserve"", ""rule"": ""allow 25 Mbps""}}
+  ]
+}"
+INTENT-003647,qos,T3_fattree,1,1,1,0,1,0.95,2.685,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 10 Mbps for flows from h3 to h1 is not feasible due to insufficient available bandwidth."",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-007736,qos,T1_tree,0,1,1,0,0,0.0,2.369,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 100 Mbps throughput from h4 to h2"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007057,qos,T3_fattree,0,1,1,0,0,0.0,2.293,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 80 Mbps throughput from h3 to h2"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-000175,qos,T2_abilene,0,1,1,0,1,0.8,3.724,"{
+  ""fault_hypothesis"": ""No dedicated queue can be allocated on switch s3 for traffic to 10.0.0.3 with 10 Mbps capacity due to lack of available bandwidth on the switch."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-000185,qos,T2_abilene,0,1,1,0,0,0.0,2.289,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h3"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006965,qos,T3_fattree,0,0,0,0,0,0.0,4.77,"{
+  ""fault_hypothesis"": ""Insufficient bandwidth reserve on link h3-h1"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""h3"", ""params"": {""acl_name"": ""bandwidth_reserve"", ""acl_rules"": ""[{\""src_ip\"": \""0.0.0.0\"", \""dst_ip\"": \""0.0.0.0\"", \""protocol\"": \""all\"", \""port_range\"": \""8"
+INTENT-001108,qos,T1_tree,0,1,1,0,1,0.8,3.582,"{
+  ""fault_hypothesis"": ""Guaranteeing minimum bandwidth of 10 Mbps for flows from h1 to h2 may not be feasible due to the current loss rate of 0.0 on port s1-eth2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-006871,qos,T2_abilene,1,1,1,0,1,0.0,2.533,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 50 Mbps throughput from h4 to h2"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006740,qos,T2_abilene,0,1,1,0,1,0.8,4.311,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 25 Mbps for flows from h3 to h4 is not feasible due to high CPU utilization and low available bandwidth on s2-eth1"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-007677,qos,T2_abilene,0,1,1,0,0,0.0,2.551,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 50 Mbps throughput from h3 to h4"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006206,qos,T3_fattree,0,1,1,0,1,0.8,3.422,"{
+  ""fault_hypothesis"": ""Enforcing strict priority queue on h3-h1 may cause uneven traffic distribution and potential congestion on other paths."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""h1"", ""params"": {""priority"": 1}}
+  ]
+}"
+INTENT-004648,qos,T1_tree,0,1,1,0,1,0.8,4.32,"{
+  ""fault_hypothesis"": ""Guaranteeing minimum bandwidth of 100 Mbps for flows from h4 to h3 may not be feasible due to the current loss rate of 0.0 on port s1-eth1, which indicates no packet loss, and the available bandwidth is already utilized by the 500 pps flow."",
+  ""confidence"": 0.8,
+  ""actions"""
+INTENT-006268,qos,T1_tree,0,1,1,0,1,0.8,3.805,"{
+  ""fault_hypothesis"": ""Guaranteeing minimum bandwidth of 80 Mbps for flows from h2 to h1 may not be feasible due to the current network topology and available bandwidth."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h2"", """
+INTENT-004275,qos,T1_tree,0,1,1,0,1,0.8,6.727,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h4 is feasible but requires additional configuration on s2 and s3 to ensure proper traffic prioritization."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2"", ""params"": {""acl"
+INTENT-003172,qos,T2_abilene,1,0,0,0,0,0.0,9.437,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h2 is feasible but requires configuration on available switches"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""config_revert"", ""target"
+INTENT-007473,qos,T3_fattree,0,1,1,0,0,0.0,2.435,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 10 Mbps throughput from h2 to h4"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-002429,qos,T2_abilene,1,1,1,0,1,0.0,2.493,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 50 Mbps for flows from h2 to h4"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007463,qos,T3_fattree,0,1,1,0,1,0.8,3.319,"{
+  ""fault_hypothesis"": ""Insufficient bandwidth reserve on link h3-h2"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""h3"", ""params"": {""acl_name"": ""bandwidth_reserve"", ""rule"": ""allow 25 Mbps""}}
+  ]
+}"
+INTENT-004869,qos,T3_fattree,0,1,1,0,0,0.0,2.274,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h4"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007426,qos,T3_fattree,0,1,1,0,0,0.0,2.468,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 50 Mbps throughput from h1 to h4"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007121,qos,T3_fattree,0,0,0,0,0,0.0,3.27,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 10 Mbps throughput from h4 to h1 - Insufficient bandwidth on h4"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""h4"", ""params"": {""limit"": ""10""}}"
+INTENT-007362,qos,T2_abilene,1,1,1,0,1,0.0,2.511,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 80 Mbps throughput from h3 to h2"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-004823,qos,T1_tree,0,1,1,0,1,0.8,6.387,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h1 is feasible but requires additional configuration on s1 and s2 to ensure proper QoS enforcement."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""acl_name"":"
+INTENT-005119,qos,T2_abilene,0,1,1,0,1,0.8,4.014,"{
+  ""fault_hypothesis"": ""Enforce strict priority queue for voice and video traffic between h3 and h2 is not feasible due to lack of available switches with sufficient bandwidth."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}},
+    {""type"": ""noop"", ""target"": """
+INTENT-000346,qos,T2_abilene,0,1,1,0,0,0.0,2.7,"{
+  ""fault_hypothesis"": ""Enforce strict priority queue for voice and video traffic between h3 and h2 is not directly supported by the topology T2_abilene"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-001211,qos,T3_fattree,0,1,1,0,0,0.95,2.597,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 80 Mbps for flows from h2 to h4 is not feasible due to insufficient available bandwidth"",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-004906,qos,T1_tree,0,0,0,0,0,0.0,7.271,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h3 is feasible but requires additional configuration on s2 and s3 to ensure proper traffic prioritization."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2"", ""params"": {""acl"
+INTENT-007225,qos,T3_fattree,0,1,1,0,0,0.0,2.393,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 10 Mbps throughput from h2 to h3"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007493,qos,T3_fattree,0,1,1,0,0,0.95,2.553,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 10 Mbps throughput from h2 to h3 is not feasible due to insufficient available bandwidth"",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-001048,qos,T2_abilene,0,1,1,0,1,0.95,4.189,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 10 Mbps for flows from h4 to h3 is not feasible due to the current bandwidth utilization and available resources."",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h4"", ""p"
+INTENT-007704,qos,T1_tree,0,1,1,0,1,0.8,3.183,"{
+  ""fault_hypothesis"": ""Bandwidth SLA not met: insufficient throughput from h4 to h2"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow all traffic from h4 to h2""}}
+  ]
+}"
+INTENT-007658,qos,T2_abilene,0,1,1,0,1,0.8,3.643,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 100 Mbps throughput from h2 to h1 - Insufficient bandwidth on h2"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""h2"", ""params"": {""rate"": ""1000000000""}}
+  ]
+}"
+INTENT-004722,qos,T3_fattree,0,1,1,0,1,0.8,4.065,"{
+  ""fault_hypothesis"": ""Guaranteeing minimum bandwidth of 50 Mbps for flows from h1 to h4 may not be feasible due to the current network topology and available bandwidth."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h4"", """
+INTENT-007610,qos,T1_tree,0,1,1,0,1,0.8,2.704,"{
+  ""fault_hypothesis"": ""Bandwidth reservation not feasible due to high CPU utilization on host h4"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h4"", ""params"": {}}
+  ]
+}"
+INTENT-007914,qos,T3_fattree,0,0,0,0,0,0.0,3.817,"{
+  ""fault_hypothesis"": ""Insufficient bandwidth reserve on link h4-h3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""h4"", ""params"": {""acl_name"": ""bandwidth_reserve"", ""acl_action"": ""allow"", ""acl_protocol"": ""tcp"", ""acl_port_range"": ""1-65535""}}
+  ]"
+INTENT-006898,qos,T2_abilene,0,1,1,0,0,0.0,2.505,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 50 Mbps throughput from h4 to h3"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-004525,qos,T2_abilene,0,1,1,0,0,0.0,2.24,"{
+  ""fault_hypothesis"": ""Unable to find switch s2 in available switches"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-002293,qos,T3_fattree,0,0,0,0,0,0.0,8.507,"{
+  ""fault_hypothesis"": ""Apply DSCP marking and priority queueing for mission-critical traffic from h1 is feasible but requires configuration changes on switches s2 and s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s2"", ""params"": {}},
+    {""type"": ""config_revert"""
+INTENT-007047,qos,T2_abilene,0,1,1,0,0,0.0,2.559,"{
+  ""fault_hypothesis"": ""Bandwidth SLA requirement: Reserve at least 50 Mbps throughput from h3 to h4"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006734,qos,T2_abilene,0,1,1,0,1,0.5,4.055,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 10 Mbps for flows from h1 to h4 is not directly supported by the current topology"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h4"", ""params"": {}}
+  ]
+}"
+INTENT-002824,qos,T2_abilene,0,1,1,0,0,0.0,2.489,"{
+  ""fault_hypothesis"": ""Guarantee minimum bandwidth of 50 Mbps for flows from h3 to h4"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007639,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,6.596,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth2 of s1 to 80 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1-eth2"", ""params"": {""rate"": 80}}
+  ]
+}"
+INTENT-005852,rate_limit_isolation,T3_fattree,0,1,1,0,0,0.0,2.177,"{
+  ""fault_hypothesis"": ""OpenFlow meter not supported on switch s3"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006985,rate_limit_isolation,T2_abilene,0,1,1,1,0,0.95,3.379,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth2 of s1 to 25 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1-eth2"", ""params"": {""rate"": 25}}
+  ]
+}"
+INTENT-007630,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.35,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s2 to 25 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""port"": ""eth3"", ""rate"": 25}}
+  ]
+}"
+INTENT-000733,rate_limit_isolation,T2_abilene,1,1,1,0,0,0.95,4.186,"{
+  ""fault_hypothesis"": ""Rate limiting ingress flow on switch s2 port eth1 to 1000 pps is feasible."",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""port"": ""eth1"", ""pps"": 1000}}
+  ]
+}"
+INTENT-007837,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.342,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s3 to 50 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""port"": ""eth3"", ""rate"": 50}}
+  ]
+}"
+INTENT-001877,rate_limit_isolation,T2_abilene,0,1,1,0,0,0.0,2.392,"{
+  ""fault_hypothesis"": ""Apply OpenFlow meter on switch s2 capping bandwidth to 25 Mbps"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-004597,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.95,3.297,"{
+  ""fault_hypothesis"": ""Rate limiting ingress flow on switch s2 port eth3 is feasible"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""port"": ""eth3"", ""pps"": 5000}}
+  ]
+}"
+INTENT-007050,rate_limit_isolation,T2_abilene,1,1,1,0,0,0.8,3.816,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth4 of s3 to 10 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""port"": ""eth4"", ""rate"": ""10 Mbps""}}
+  ]
+}"
+INTENT-007592,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.411,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s1 to 100 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth3"", ""rate"": 100}}
+  ]
+}"
+INTENT-007331,rate_limit_isolation,T2_abilene,0,1,1,0,1,0.95,3.223,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth2 of s3 to 100 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""rate"": 100}}
+  ]
+}"
+INTENT-000735,rate_limit_isolation,T1_tree,0,1,1,1,0,0.8,4.035,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s3-eth3 with burst 6400 kbps and rate 50 Mbps is feasible but may cause rate limiting"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3-eth3"", ""params"": {""burst"": 6400, ""rate"": 50}}
+  ]
+}"
+INTENT-007915,rate_limit_isolation,T2_abilene,0,1,1,1,0,0.95,3.338,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth3 of s2 to 100 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2-eth3"", ""params"": {""rate"": 100}}
+  ]
+}"
+INTENT-007189,rate_limit_isolation,T1_tree,1,1,1,0,0,0.8,3.237,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth1 of s3 to 80 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""rate"": ""80Mbps""}}
+  ]
+}"
+INTENT-007382,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.304,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s1 to 10 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth3"", ""rate"": ""10 Mbps""}}
+  ]
+}"
+INTENT-007234,rate_limit_isolation,T2_abilene,0,1,1,0,1,0.8,3.502,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth1 of s3 to 25 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""rate"": 25}}
+  ]
+}"
+INTENT-007776,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.361,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth4 of s1 to 50 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth4"", ""rate"": ""50""}}
+  ]
+}"
+INTENT-005924,rate_limit_isolation,T3_fattree,0,0,0,0,0,0.0,9.799,"{
+  ""fault_hypothesis"": ""Quarantine host h4 by moving port eth4 to isolation VLAN 999 is feasible but requires additional configuration to isolate host h4 from the rest of the network. This may involve adding ACLs to restrict traffic to and from host h4, as well as configuring the isolation VLAN on "
+INTENT-006801,rate_limit_isolation,T3_fattree,1,1,1,1,0,0.8,3.488,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth4 of s1 to 25 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1-eth4"", ""params"": {""rate"": 25}}
+  ]
+}"
+INTENT-002744,rate_limit_isolation,T2_abilene,0,1,1,1,0,0.8,4.408,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s3-eth1 with burst 10240 kbps and rate 80 Mbps is feasible but may cause rate limiting on s3-eth1"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3-eth1"", ""params"": {""burst"": 10240, ""rate"": 8000000}}
+  ]
+}"
+INTENT-007901,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.391,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth4 of s2 to 10 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""port"": ""eth4"", ""rate"": ""10 Mbps""}}
+  ]
+}"
+INTENT-001514,rate_limit_isolation,T2_abilene,0,1,1,0,1,0.8,4.715,"{
+  ""fault_hypothesis"": ""Quarantine host h3 by moving port eth3 to isolation VLAN 999 is feasible but requires rerouting traffic through a different switch."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {""port"": ""eth3"", ""vlan"": ""999""}}
+  ]
+}"
+INTENT-001142,rate_limit_isolation,T3_fattree,0,1,1,0,0,0.0,2.064,"{
+  ""fault_hypothesis"": ""OpenFlow meter not supported on switch s1"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-005645,rate_limit_isolation,T2_abilene,0,1,1,0,1,0.95,3.648,"{
+  ""fault_hypothesis"": ""Rate limiting ingress flow on switch s3 port eth1 to 5000 pps is feasible."",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""port"": ""eth1"", ""pps"": 5000}}
+  ]
+}"
+INTENT-004902,rate_limit_isolation,T3_fattree,0,1,1,0,0,0.0,2.061,"{
+  ""fault_hypothesis"": ""OpenFlow meter not supported on switch s1"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006661,rate_limit_isolation,T3_fattree,0,1,1,0,0,0.0,2.212,"{
+  ""fault_hypothesis"": ""Apply OpenFlow meter on switch s2 capping bandwidth to 25 Mbps"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007740,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,3.651,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth1 of s3 to 80 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""port"": ""eth1"", ""rate"": ""8000000""}}
+  ]
+}"
+INTENT-001223,rate_limit_isolation,T1_tree,0,1,1,0,1,0.65,3.748,"{
+  ""fault_hypothesis"": ""Moving port eth1 to isolation VLAN 999 on host h3 may cause network instability due to lack of isolation on other hosts."",
+  ""confidence"": 0.65,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {""vlan"": 999}}
+  ]
+}"
+INTENT-007145,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,3.346,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth1 of s3 to 10 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""rate"": ""10Mbps""}}
+  ]
+}"
+INTENT-007363,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.384,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s1 to 80 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth3"", ""rate"": 80}}
+  ]
+}"
+INTENT-007169,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,3.417,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth2 of s2 to 100 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2-eth2"", ""params"": {""rate"": 100}}
+  ]
+}"
+INTENT-006863,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.107,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s3 to 50 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""rate"": 50}}
+  ]
+}"
+INTENT-007813,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,3.532,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth4 of s1 to 10 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth4"", ""rate"": ""10 Mbps""}}
+  ]
+}"
+INTENT-006828,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.406,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth1 of s2 to 50 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""port"": ""eth1"", ""rate"": ""50""}}
+  ]
+}"
+INTENT-007295,rate_limit_isolation,T1_tree,0,1,1,0,1,0.9,2.868,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s2 to 50 Mbps is feasible."",
+  ""confidence"": 0.9,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""rate"": 50}}
+  ]
+}"
+INTENT-007827,rate_limit_isolation,T2_abilene,0,1,1,0,1,0.95,3.264,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth3 of s3 to 50 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3"", ""params"": {""rate"": ""50 Mbps""}}
+  ]
+}"
+INTENT-002180,rate_limit_isolation,T1_tree,0,1,1,0,0,0.95,2.637,"{
+  ""fault_hypothesis"": ""Quarantine host h1 by moving port eth3 to isolation VLAN 999 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-006400,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,5.489,"{
+  ""fault_hypothesis"": ""Quarantine host h2 by moving port eth2 to isolation VLAN 999 is feasible but requires additional configuration to isolate the host and port."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s3-eth2"", ""params"": {""vlan"": 999}},
+    {""type"": ""rate_limit"""
+INTENT-007595,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.381,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth4 of s1 to 25 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth4"", ""rate"": 25}}
+  ]
+}"
+INTENT-001270,rate_limit_isolation,T3_fattree,1,1,1,0,1,0.0,2.059,"{
+  ""fault_hypothesis"": ""OpenFlow meter not supported on switch s3"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-003338,rate_limit_isolation,T1_tree,0,1,1,0,1,0.95,3.106,"{
+  ""fault_hypothesis"": ""Rate limiting ingress flow on switch s2 port eth2 is already set to 2500 pps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-003077,rate_limit_isolation,T3_fattree,1,1,1,1,0,0.8,4.18,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s1-eth3 with burst 1280 kbps and rate 10 Mbps is feasible but may cause rate limiting"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1-eth3"", ""params"": {""burst"": 1280, ""rate"": 1000000}}
+  ]
+}"
+INTENT-004620,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.5,4.642,"{
+  ""fault_hypothesis"": ""Quarantine host h2 by moving port eth3 to isolation VLAN 999 is feasible but requires isolation VLAN 999 to exist. Isolation VLAN 999 does not exist in the network."",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""isolation VLAN 999"", ""params"": {""create"""
+INTENT-007172,rate_limit_isolation,T2_abilene,1,1,1,1,0,0.95,3.434,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth4 of s2 to 10 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2-eth4"", ""params"": {""rate"": ""10 Mbps""}}
+  ]
+}"
+INTENT-004279,rate_limit_isolation,T2_abilene,0,1,1,0,1,0.8,3.891,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s1-eth3 with burst 1280 kbps and rate 10 Mbps is feasible but not recommended due to high CPU usage"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""burst"": 1280, ""rate"": 1000}}
+  ]
+}"
+INTENT-007521,rate_limit_isolation,T2_abilene,0,1,1,1,0,0.95,3.371,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth4 of s2 to 25 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2-eth4"", ""params"": {""rate"": 25}}
+  ]
+}"
+INTENT-002536,rate_limit_isolation,T2_abilene,1,1,1,1,0,0.8,4.177,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s1-eth4 with burst 10240 kbps and rate 80 Mbps is feasible but may cause rate limiting on s1-eth4"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1-eth4"", ""params"": {""burst"": 10240, ""rate"": 80}}
+  ]
+}"
+INTENT-007907,rate_limit_isolation,T2_abilene,0,1,1,0,1,0.95,3.409,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth1 of s1 to 80 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""rate"": ""8000000""}}
+  ]
+}"
+INTENT-007916,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,3.562,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s2 to 80 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2-eth3"", ""params"": {""rate"": 80}}
+  ]
+}"
+INTENT-005139,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.822,"{
+  ""fault_hypothesis"": ""Moving port eth1 to isolation VLAN 999 on host h4 may cause network instability due to lack of isolation on other hosts. Consider rerouting traffic to other hosts or adding ACLs to isolate h4."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""h4"", ""par"
+INTENT-007633,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.531,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth4 of s2 to 50 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""port"": ""eth4"", ""rate"": 50}}
+  ]
+}"
+INTENT-005070,rate_limit_isolation,T1_tree,0,1,1,0,1,0.8,3.898,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s2-eth2 with burst 3200 kbps and rate 25 Mbps is feasible but may cause rate limiting"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""burst"": 3200, ""rate"": 25}}
+  ]
+}"
+INTENT-007546,rate_limit_isolation,T2_abilene,0,1,1,0,1,0.95,3.494,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth3 of s1 to 25 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth3"", ""rate"": 25}}
+  ]
+}"
+INTENT-001515,rate_limit_isolation,T1_tree,0,1,1,1,0,0.8,3.784,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s3-eth4 with burst 10240 kbps and rate 80 Mbps is feasible but may cause rate limiting"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s3-eth4"", ""params"": {""burst"": 10240, ""rate"": 80}}
+  ]
+}"
+INTENT-001592,rate_limit_isolation,T1_tree,0,1,1,0,0,0.95,2.637,"{
+  ""fault_hypothesis"": ""Quarantine host h1 by moving port eth1 to isolation VLAN 999 is infeasible because host h1 is not connected to switch s2"",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-002040,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,3.751,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s1-eth2 with burst 6400 kbps and rate 50 Mbps is feasible but may cause rate limiting"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1-eth2"", ""params"": {""burst"": 6400, ""rate"": 50}}
+  ]
+}"
+INTENT-006873,rate_limit_isolation,T1_tree,0,1,1,0,1,0.9,3.246,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth3 of s1 to 100 Mbps is feasible and safe."",
+  ""confidence"": 0.9,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth3"", ""rate"": 100}}
+  ]
+}"
+INTENT-006829,rate_limit_isolation,T3_fattree,0,1,1,1,0,0.8,3.544,"{
+  ""fault_hypothesis"": ""Clamping down transmission rate on port eth1 of s1 to 25 Mbps is feasible, but may impact network performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth1"", ""rate"": ""25 Mbps""}}
+  ]
+}"
+INTENT-006391,rate_limit_isolation,T1_tree,0,1,1,1,0,0.8,3.912,"{
+  ""fault_hypothesis"": ""Police ingress traffic on s1-eth2 with burst 10240 kbps and rate 80 Mbps is feasible but may cause rate limiting"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1-eth2"", ""params"": {""burst"": ""10240"", ""rate"": ""80""}}
+  ]
+}"
+INTENT-007058,rate_limit_isolation,T2_abilene,0,1,1,1,0,0.95,3.299,"{
+  ""fault_hypothesis"": ""Clamp down transmission rate on port eth3 of s2 to 80 Mbps"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2-eth3"", ""params"": {""rate"": 800000000}}
+  ]
+}"
+INTENT-007274,reachability,T2_abilene,0,1,1,0,1,0.8,4.099,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h1 over s1 is feasible but requires rerouting traffic through s1."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-000688,reachability,T2_abilene,0,1,1,0,1,0.8,4.232,"{
+  ""fault_hypothesis"": ""Route traffic from h3 to h4 using alternative shortest path is feasible but requires rerouting through s2 and s3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-007559,reachability,T1_tree,0,1,1,0,1,0.95,3.923,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h3 and h1 over s3 is not feasible due to the lack of direct connectivity between h3 and h1."",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h1"", ""para"
+INTENT-005506,reachability,T2_abilene,0,1,1,0,1,0.5,5.483,"{
+  ""fault_hypothesis"": ""Reachability between h1 and h3 is not guaranteed due to lack of direct connectivity between them."",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}}
+  ]
+}"
+INTENT-001462,reachability,T2_abilene,0,1,1,0,1,0.5,3.646,"{
+  ""fault_hypothesis"": ""h2 and h4 are not directly connected to the same switch"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""s4"", ""params"": {}}
+  ]
+}"
+INTENT-007700,reachability,T2_abilene,0,1,1,0,1,0.8,3.843,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h4 and h3 over s3 is feasible but requires rerouting traffic through s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {""src"": ""h4"", ""dst"": ""h3""}}
+  ]
+}"
+INTENT-000096,reachability,T1_tree,0,1,1,0,1,0.8,3.344,"{
+  ""fault_hypothesis"": ""Route traffic from h4 to h3 using alternative shortest path is feasible but requires rerouting through s2"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""src"": ""h4"", ""dst"": ""h3""}}
+  ]
+}"
+INTENT-005467,reachability,T2_abilene,1,1,1,0,1,0.0,2.259,"{
+  ""fault_hypothesis"": ""Route traffic from h4 to h2 using alternative shortest path"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007099,reachability,T2_abilene,0,1,1,0,1,0.8,6.119,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h1 and h3 over s1 is feasible but requires rerouting traffic through s2 and s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {}"
+INTENT-006976,reachability,T2_abilene,0,1,1,0,1,0.8,3.858,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h1 over s2 is feasible but requires rerouting traffic through s2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""dst"": ""h1"", ""src"": ""h2""}}
+  ]
+}"
+INTENT-007903,reachability,T3_fattree,0,1,1,1,0,0.5,3.188,"{
+  ""fault_hypothesis"": ""Reachability issue between h3 and h2 over s1 due to lack of available switches"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-006870,reachability,T3_fattree,0,1,1,1,0,0.8,6.213,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h3 and h1 over s2 is feasible but requires configuration changes."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s2"", ""params"": {""config"": ""default_config""}},
+    {""type"": ""acl_add"", ""target"": "
+INTENT-007247,reachability,T2_abilene,0,1,1,0,1,0.8,4.006,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h3 and h4 over s2 is feasible but requires rerouting traffic through s2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""destination"": ""h3"", ""source"": ""h4""}}
+  ]
+}"
+INTENT-005639,reachability,T2_abilene,0,1,1,0,1,0.5,3.657,"{
+  ""fault_hypothesis"": ""Reachability between h1 and h3 is not guaranteed due to lack of direct connectivity between them."",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}}
+  ]
+}"
+INTENT-001100,reachability,T1_tree,0,1,1,0,1,0.8,3.52,"{
+  ""fault_hypothesis"": ""h3 and h4 are not directly connected via a single hop"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h4"", ""params"": {}}
+  ]
+}"
+INTENT-005165,reachability,T1_tree,0,1,1,0,1,0.8,3.253,"{
+  ""fault_hypothesis"": ""Reachability issue between h3 and h1 via switch s2 due to high CPU utilization on s2"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s2"", ""params"": {""config"": ""default_config""}}
+  ]
+}"
+INTENT-007576,reachability,T3_fattree,0,1,1,1,0,0.8,6.178,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h4 over s3 is feasible but requires configuration changes."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s3"", ""params"": {}},
+    {""type"": ""acl_add"", ""target"": ""s3"", ""params"": {""src"": ""h"
+INTENT-003074,reachability,T2_abilene,1,1,1,0,0,0.8,4.06,"{
+  ""fault_hypothesis"": ""Route traffic from h3 to h4 using alternative shortest path is feasible but requires rerouting through s2 and s3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-007977,reachability,T2_abilene,0,1,1,0,1,0.8,3.469,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h1 and h2 over s1 is feasible but requires rerouting traffic through s2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-007767,reachability,T1_tree,0,1,1,0,1,0.8,3.912,"{
+  ""fault_hypothesis"": ""Packet forwarding between h4 and h3 over s1 is feasible but requires rerouting packets through s2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {""next_hop"": ""s2""}}
+  ]
+}"
+INTENT-007851,reachability,T1_tree,0,1,1,0,1,0.8,7.974,"{
+  ""fault_hypothesis"": ""Packet forwarding between h4 and h2 over s2 is feasible but requires rerouting packets through s1 and s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {}},
+    {""type"": ""acl_add"
+INTENT-007398,reachability,T1_tree,0,1,1,0,1,0.8,3.84,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h3 and h1 over s3 is not feasible due to the lack of direct connectivity between h3 and h1."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h1"", ""param"
+INTENT-006650,reachability,T2_abilene,0,1,1,0,1,0.8,8.527,"{
+  ""fault_hypothesis"": ""Reachability issue between h1 and h4 via switch s2, considering s2 has available bandwidth and is not congested."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2"", ""params"": {""ingress"": {""protocol"": ""all"", ""source_port_range"": ""all"", ""destination_p"
+INTENT-006323,reachability,T3_fattree,0,1,1,0,0,0.0,2.521,"{
+  ""fault_hypothesis"": ""Route traffic from h1 to h4 using alternative shortest path is not feasible due to lack of available switches."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-002255,reachability,T2_abilene,0,1,1,0,1,0.9,3.233,"{
+  ""fault_hypothesis"": ""h2 is reachable from h1 via switch s1"",
+  ""confidence"": 0.9,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow h1 h2""}}
+  ]
+}"
+INTENT-006307,reachability,T1_tree,0,1,1,0,1,0.5,2.727,"{
+  ""fault_hypothesis"": ""h1 and h2 are not directly connected via a switch"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-006900,reachability,T1_tree,0,1,1,0,1,0.8,3.742,"{
+  ""fault_hypothesis"": ""Packet forwarding between h2 and h4 over s2 is feasible but requires rerouting through s1 or s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-003679,reachability,T2_abilene,0,1,1,0,1,0.5,9.38,"{
+  ""fault_hypothesis"": ""h4 and h2 are not directly connected to the same switch"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}},
+    {""type"": ""noop"", ""tar"
+INTENT-004302,reachability,T3_fattree,0,1,1,0,0,0.0,3.166,"{
+  ""fault_hypothesis"": ""Establish backup forwarding path from h2 to h4 avoiding failed link"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006836,reachability,T2_abilene,1,1,1,0,0,0.8,3.838,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h4 over s3 is feasible but requires rerouting traffic through s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {""src"": ""h2"", ""dst"": ""h4""}}
+  ]
+}"
+INTENT-006819,reachability,T2_abilene,0,1,1,0,1,0.8,3.733,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h1 over s3 is feasible but requires rerouting traffic through s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {""src"": ""h1"", ""dst"": ""h2""}}
+  ]
+}"
+INTENT-006812,reachability,T2_abilene,0,1,1,0,1,0.8,3.347,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h1 over s1 is feasible but requires rerouting traffic through s1."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-007936,reachability,T2_abilene,0,1,1,0,1,0.8,3.858,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h3 and h2 over s3 is feasible but requires rerouting traffic through s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {""src"": ""h2"", ""dst"": ""h3""}}
+  ]
+}"
+INTENT-006001,reachability,T1_tree,0,1,1,0,1,0.8,4.084,"{
+  ""fault_hypothesis"": ""Reachability issue due to high CPU utilization on host h1"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h2"", ""params"": {}},
+    {""type"": ""rate_limit"", ""target"": ""h1"", ""params"": {""threshold"": 50}}
+  ]"
+INTENT-003194,reachability,T3_fattree,0,1,1,0,1,0.5,3.522,"{
+  ""fault_hypothesis"": ""h1 and h4 are not directly connected in the T3_fattree topology"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h4"", ""params"": {}}
+  ]
+}"
+INTENT-003036,reachability,T1_tree,0,1,1,0,1,0.9,2.932,"{
+  ""fault_hypothesis"": ""h3 to h4 connectivity restored via switch s1"",
+  ""confidence"": 0.9,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow h3 h4""}}
+  ]
+}"
+INTENT-004500,reachability,T2_abilene,0,1,1,0,1,0.5,3.825,"{
+  ""fault_hypothesis"": ""Route traffic from h4 to h3 using alternative shortest path is feasible but not directly supported by the topology"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h4"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}}
+  ]
+}"
+INTENT-007764,reachability,T1_tree,0,1,1,0,1,0.8,3.665,"{
+  ""fault_hypothesis"": ""Packet forwarding between h4 and h2 is not possible due to lack of direct connectivity between them."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h4"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h2"", ""params"": {}}
+  ]
+}"
+INTENT-000148,reachability,T1_tree,0,1,1,0,0,0.95,2.194,"{
+  ""fault_hypothesis"": ""Route traffic from h3 to h2 using alternative shortest path is not feasible due to lack of available switches"",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-007889,reachability,T3_fattree,0,1,1,1,0,0.8,4.949,"{
+  ""fault_hypothesis"": ""Packet forwarding between h4 and h2 over s2 is feasible but requires configuration changes to establish end-to-end forwarding."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s2"", ""params"": {""config"": ""default""}},
+    {""type"": ""acl_add"", ""targe"
+INTENT-007816,reachability,T1_tree,0,1,1,0,1,0.9,3.019,"{
+  ""fault_hypothesis"": ""Packet forwarding between h1 and h2 is possible over s1"",
+  ""confidence"": 0.9,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow all traffic between h1 and h2""}}
+  ]
+}"
+INTENT-005158,reachability,T3_fattree,0,1,1,1,0,0.95,4.14,"{
+  ""fault_hypothesis"": ""switch s1 is up and has connectivity to both h1 and h4"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow h1 h4""}},
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow h4 h1""}}
+  ]
+}"
+INTENT-000433,reachability,T1_tree,0,1,1,0,1,0.8,3.252,"{
+  ""fault_hypothesis"": ""Route traffic from h4 to h3 using alternative shortest path is feasible but requires rerouting through s2"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""src"": ""h4"", ""dst"": ""h3""}}
+  ]
+}"
+INTENT-007598,reachability,T3_fattree,0,1,1,1,0,0.8,6.055,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h1 and h4 over s1 is feasible but requires configuration changes."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s1"", ""params"": {""config"": ""default_config""}},
+    {""type"": ""acl_add"", ""target"": "
+INTENT-007040,reachability,T3_fattree,0,0,0,0,0,0.0,7.169,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h4 over s1 is feasible but requires configuration changes."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s1"", ""params"": {""config"": ""default_config""}},
+    {""type"": ""acl_add"", ""target"": "
+INTENT-006648,reachability,T3_fattree,0,1,1,0,1,0.5,4.007,"{
+  ""fault_hypothesis"": ""h3 and h4 are not directly connected in the T3_fattree topology"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h4"", ""params"": {}}
+  ]
+}"
+INTENT-007026,reachability,T2_abilene,0,1,1,0,1,0.8,3.689,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h1 over s3 is feasible but requires rerouting traffic through s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {""src"": ""h1"", ""dst"": ""h2""}}
+  ]
+}"
+INTENT-001581,reachability,T3_fattree,0,1,1,0,1,0.5,3.731,"{
+  ""fault_hypothesis"": ""h4 and h1 are not directly connected in the T3_fattree topology"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h4"", ""params"": {}}
+  ]
+}"
+INTENT-001529,reachability,T1_tree,0,1,1,0,1,0.8,2.871,"{
+  ""fault_hypothesis"": ""h2 and h4 are not directly connected via a single hop"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-001098,reachability,T2_abilene,0,1,1,0,1,0.8,5.467,"{
+  ""fault_hypothesis"": ""Route traffic from h2 to h3 using alternative shortest path is feasible but requires rerouting through s2 to s4 and then s4 to s3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""dst"": ""s4"", ""src"": ""s3""}},
+    {""type"": ""reroute"", ""tar"
+INTENT-005015,reachability,T2_abilene,0,1,1,0,1,0.5,4.569,"{
+  ""fault_hypothesis"": ""Reachability between h3 and h1 is not guaranteed due to lack of direct connectivity between the two hosts."",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""noop"", ""target"": ""h3"", ""params"": {}}
+  ]
+}"
+INTENT-007319,reachability,T3_fattree,0,1,1,1,0,0.8,6.883,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h4 and h1 over s3 is feasible but requires configuration changes."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s3"", ""params"": {}},
+    {""type"": ""acl_add"", ""target"": ""s3"", ""params"": {""src"": ""h"
+INTENT-000053,reachability,T3_fattree,0,1,1,0,0,0.0,2.32,"{
+  ""fault_hypothesis"": ""Establish backup forwarding path from h2 to h4 avoiding failed link"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007654,reachability,T2_abilene,0,1,1,0,1,0.85,4.183,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h2 and h3 over s1 is feasible but requires rerouting traffic through s2 and s3."",
+  ""confidence"": 0.85,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s3"", ""params"": {"
+INTENT-006956,reachability,T1_tree,0,1,1,0,1,0.8,3.809,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h4 and h1 over s3 is feasible but requires rerouting packets through s1 and s2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {}"
+INTENT-007819,reachability,T1_tree,0,1,1,0,1,0.8,4.115,"{
+  ""fault_hypothesis"": ""Packet forwarding not established between h1 and h3 due to lack of direct connectivity between h1 and h3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""action"": ""allow"", ""protocol"": ""all"", ""src_port"": ""eth3"", ""dst_port"": ""eth3""}}
+ "
+INTENT-007100,reachability,T1_tree,1,1,1,0,0,0.8,2.965,"{
+  ""fault_hypothesis"": ""Packet forwarding between h1 and h4 over s2 is feasible but requires s2 to be operational."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-006838,reachability,T3_fattree,0,1,1,1,0,0.8,3.9,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h1 and h4 over s2 is feasible but may require additional configuration or rerouting."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {""action"": ""ping"", ""destination"": ""h1"", ""source"": ""h4""}"
+INTENT-006958,reachability,T2_abilene,0,1,1,0,1,0.8,3.769,"{
+  ""fault_hypothesis"": ""Establishing end-to-end packet forwarding between h3 and h2 over s2 is feasible but requires rerouting traffic through s2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""destination"": ""h3"", ""source"": ""h2""}}
+  ]
+}"
+INTENT-006321,reachability,T1_tree,0,0,0,0,0,0.0,4.086,"{
+  ""fault_hypothesis"": ""Establish backup forwarding path from h4 to h3 avoiding failed link"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2"", ""params"": {}},
+    {""type"": ""acl_add"", ""target"": ""s3"", ""params"": {}},
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"":"
+INTENT-007126,routing_policy,T3_fattree,0,1,1,1,0,0.8,8.43,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.2 completely off s3-eth3 is feasible but may require additional configuration to ensure no traffic is lost."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s3-eth3"", ""params"": {""rule"": ""allow all traffic to 10.0.0.2""}},
+    {""t"
+INTENT-006933,routing_policy,T1_tree,0,1,1,0,1,0.9,2.98,"{
+  ""fault_hypothesis"": ""Reroute traffic from s3-eth4 to s1"",
+  ""confidence"": 0.9,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-001628,routing_policy,T2_abilene,0,1,1,0,1,0.8,9.002,"{
+  ""fault_hypothesis"": ""loop-free policy path h4 -> s1 -> h2 exists in critical subnet"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow h4 -> s1 -> h2""}},
+    {""type"": ""acl_add"", ""target"": ""h2"", ""params"": {""rule"": ""allow h4 -> s1 -> h2""}}
+  ]
+}"
+INTENT-005474,routing_policy,T1_tree,0,1,1,0,1,0.8,6.089,"{
+  ""fault_hypothesis"": ""Reroute transit traffic away from congested link s1-eth4 via switch s1 is feasible but may cause routing instability due to lack of alternative paths."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {""destination"": ""s2"", ""interface"": """
+INTENT-006178,routing_policy,T3_fattree,0,1,1,1,0,0.95,5.473,"{
+  ""fault_hypothesis"": ""loop-free policy path h3 -> s1 -> h2 for critical subnet exists"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""policy"": ""loop-free_policy""}},
+    {""type"": ""acl_add"", ""target"": ""h2"", ""params"": {""policy"": ""loop-free_policy""}},
+    {"""
+INTENT-007181,routing_policy,T1_tree,0,1,1,1,0,0.8,4.112,"{
+  ""fault_hypothesis"": ""Reroute traffic from 10.0.0.3 to s1-eth2 to avoid congestion on s2-eth2"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1-eth2"", ""params"": {}}
+  ]
+}"
+INTENT-006906,routing_policy,T1_tree,0,1,1,0,1,0.95,2.688,"{
+  ""fault_hypothesis"": ""Redirect traffic from s3-eth2 to s1"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-007281,routing_policy,T3_fattree,0,1,1,1,0,0.8,3.817,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.3 completely off s2-eth3 is feasible but may require additional configuration to ensure no traffic is lost."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2-eth3"", ""params"": {""action"": ""drop"", ""protocol"": ""all""}}
+  ]
+}"
+INTENT-006654,routing_policy,T2_abilene,0,1,1,0,1,0.8,13.338,"{
+  ""fault_hypothesis"": ""Divert all elephant flows destined to h2 to secondary path s1 -> s3 -> h2 is feasible but may require additional configuration to ensure optimal routing."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""action"": ""allow"", ""protocol"": """
+INTENT-007601,routing_policy,T2_abilene,0,1,1,1,0,0.8,4.579,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.1 completely off s1-eth4 is feasible but may require rerouting traffic through other switches to avoid congestion."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth4"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s3-e"
+INTENT-007515,routing_policy,T2_abilene,0,1,1,0,1,0.8,4.291,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.2 completely off s3-eth1 is feasible but may require rerouting traffic through other switches to avoid congestion."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {""dst"": ""10.0.0.2"", ""src"": ""s3-eth1""}}
+  ]
+}"
+INTENT-007082,routing_policy,T3_fattree,0,0,0,0,0,0.0,4.194,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.2 completely off s3-eth2 is feasible but may require additional configuration to ensure no traffic is lost."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s3-eth2"", ""params"": {""rule"": ""allow all traffic from 10.0.0.2 to any de"
+INTENT-005737,routing_policy,T3_fattree,0,1,1,1,0,0.8,5.693,"{
+  ""fault_hypothesis"": ""loop-free routing policy enforcement failed due to missing link between h2 and s1"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h2"", ""params"": {""action"": ""add_link"", ""link"": {""source"": ""h2"", ""destination"": ""s1""}}},
+    {""type"": ""noop"", ""target"": ""s1"","
+INTENT-002637,routing_policy,T3_fattree,0,1,1,1,0,0.8,3.455,"{
+  ""fault_hypothesis"": ""Reroute transit traffic away from congested link s3-eth4 via switch s3 is feasible but may cause routing instability due to lack of available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-007957,routing_policy,T1_tree,0,1,1,1,0,0.9,3.112,"{
+  ""fault_hypothesis"": ""Rerouting traffic from s2-eth3 to s1-eth3 to comply with routing policy"",
+  ""confidence"": 0.9,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1-eth3"", ""params"": {}}
+  ]
+}"
+INTENT-000918,routing_policy,T2_abilene,0,0,0,0,0,0.0,9.682,"{
+  ""fault_hypothesis"": ""loop-free routing policy enforced successfully on critical subnet"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2"", ""params"": {""rule"": ""allow h1 -> s2 -> h1""}},
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""deny h2 -> s1 -> s2""}},
+ "
+INTENT-007982,routing_policy,T2_abilene,0,1,1,1,0,0.8,3.633,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.1 completely off s1-eth1 is feasible but requires rerouting traffic through s2-eth1"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth1"", ""params"": {}}
+  ]
+}"
+INTENT-001357,routing_policy,T3_fattree,0,1,1,1,0,0.8,8.084,"{
+  ""fault_hypothesis"": ""Diverting elephant flows to secondary path s1 -> s3 -> h1 is feasible but may cause performance degradation due to increased latency."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow all traffic to h1""}},
+    {""type"": ""a"
+INTENT-007167,routing_policy,T2_abilene,0,1,1,0,0,0.0,2.91,"{
+  ""fault_hypothesis"": ""Traffic engineering mandate: Steer flows for 10.0.0.2 completely off s2-eth1"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007260,routing_policy,T3_fattree,0,1,1,1,0,0.8,3.827,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.4 completely off s3-eth2 is feasible but requires rerouting traffic to a different path."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s3-eth2"", ""params"": {""destination"": ""s3-eth1""}}
+  ]
+}"
+INTENT-006841,routing_policy,T2_abilene,0,1,1,0,1,0.8,5.005,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.3 completely off s3-eth2 is feasible but may require rerouting traffic through other switches to avoid congestion."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s2"", ""par"
+INTENT-007844,routing_policy,T3_fattree,0,1,1,1,0,0.8,4.189,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.2 completely off s3-eth2 is feasible but may require additional configuration to ensure no traffic is lost."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s3-eth2"", ""params"": {""rule"": ""allow all traffic from 10.0.0.2 to any de"
+INTENT-007771,routing_policy,T3_fattree,0,1,1,1,0,0.8,6.176,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.1 completely off s2-eth4: Possible, but requires explicit configuration change on s2-eth4"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2-eth4"", ""params"": {""rule"": ""drop all traffic to 10.0.0.1""}}
+  ]
+}"
+INTENT-001818,routing_policy,T3_fattree,1,1,1,1,0,0.8,12.129,"{
+  ""fault_hypothesis"": ""Pin primary forwarding path for 10.0.0.1 through core switch s2 is feasible but requires configuration changes to ensure high availability and performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s2"", ""params"": {""config"": ""default_confi"
+INTENT-007673,routing_policy,T3_fattree,1,1,1,1,0,0.8,4.079,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.3 completely off s1-eth1 is feasible but requires rerouting traffic through an alternative path."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1-eth1"", ""params"": {""destination"": ""s2-eth1""}}
+  ]
+}"
+INTENT-007326,routing_policy,T1_tree,1,1,1,1,0,0.8,3.05,"{
+  ""fault_hypothesis"": ""Reroute traffic from s1-eth3 to avoid congestion on s1-eth3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth3"", ""params"": {}}
+  ]
+}"
+INTENT-007094,routing_policy,T1_tree,0,1,1,1,0,0.8,3.423,"{
+  ""fault_hypothesis"": ""Rerouting traffic from 10.0.0.2 to s2-eth2 is feasible due to available bandwidth."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth2"", ""params"": {""destination"": ""10.0.0.2""}}
+  ]
+}"
+INTENT-006635,routing_policy,T1_tree,0,1,1,0,1,0.8,4.272,"{
+  ""fault_hypothesis"": ""loop detected in routing policy path h2 -> s3 -> h3"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_remove"", ""target"": ""s3"", ""params"": {}},
+    {""type"": ""acl_add"", ""target"": ""h3"", ""params"": {""action"": ""drop"", ""protocol"": ""all""}}
+  ]
+}"
+INTENT-007340,routing_policy,T1_tree,0,1,1,1,0,0.8,11.713,"{
+  ""fault_hypothesis"": ""Reroute traffic from s1-eth1 to s2-eth1 to comply with routing policy"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth1"", ""params"": {}}
+  ]
+}"
+INTENT-003275,routing_policy,T3_fattree,0,1,1,1,0,0.8,6.13,"{
+  ""fault_hypothesis"": ""Diverting elephant flows to secondary path s1 -> s3 -> h4 is feasible but may cause network congestion due to increased traffic on s3-eth2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow all traffic to s3-eth2""}},
+    "
+INTENT-003210,routing_policy,T3_fattree,0,1,1,1,0,0.8,10.229,"{
+  ""fault_hypothesis"": ""Diverting elephant flows to secondary path s1 -> s3 -> h3 is feasible but may cause performance degradation due to increased latency. Consider rerouting to s1 -> s2 -> h3 for better performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""p"
+INTENT-006923,routing_policy,T1_tree,0,1,1,0,1,0.8,5.098,"{
+  ""fault_hypothesis"": ""Rerouting traffic from 10.0.0.1 to s2-eth3 may cause congestion on s2-eth3 due to high pps and loss rate."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {""dst"": ""10.0.0.1"", ""interface"": ""s2-eth3""}}
+  ]
+}"
+INTENT-006978,routing_policy,T1_tree,0,1,1,1,0,0.8,3.814,"{
+  ""fault_hypothesis"": ""Rerouting traffic from 10.0.0.4 to s1-eth4 is feasible but may cause network congestion due to high pps."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1-eth4"", ""params"": {}}
+  ]
+}"
+INTENT-005714,routing_policy,T1_tree,0,1,1,0,1,0.8,10.67,"{
+  ""fault_hypothesis"": ""Pin primary forwarding path for 10.0.0.4 through core switch s2 is feasible but requires configuration changes to ensure high availability and performance."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s2"", ""params"": {""cmd"": ""show running-con"
+INTENT-007682,routing_policy,T1_tree,0,1,1,0,1,0.9,3.007,"{
+  ""fault_hypothesis"": ""Reroute traffic from s3-eth1 to s1"",
+  ""confidence"": 0.9,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-006147,routing_policy,T1_tree,0,1,1,0,0,0.95,2.67,"{
+  ""fault_hypothesis"": ""Pin primary forwarding path for 10.0.0.2 through core switch s3 is infeasible due to lack of available forwarding paths."",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-007642,routing_policy,T3_fattree,0,1,1,1,0,0.8,3.754,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.2 completely off s2-eth2 is feasible but requires rerouting traffic to a different path."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth2"", ""params"": {""destination"": ""s2-eth1""}}
+  ]
+}"
+INTENT-007624,routing_policy,T1_tree,1,1,1,1,0,0.8,3.471,"{
+  ""fault_hypothesis"": ""Rerouting traffic from 10.0.0.3 to s2-eth3 is feasible but may cause network congestion due to high pps."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth3"", ""params"": {}}
+  ]
+}"
+INTENT-007113,routing_policy,T2_abilene,1,1,1,1,0,0.8,5.135,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.1 completely off s1-eth1 is feasible but may require rerouting traffic through s2-eth1 or s3-eth1 to avoid congestion."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": """
+INTENT-007726,routing_policy,T2_abilene,0,1,1,1,0,0.8,4.316,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.1 completely off s2-eth3 is feasible but may require additional configuration to ensure no traffic is lost."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2-eth3"", ""params"": {""rule"": ""allow all traffic from 10.0.0.1 to any de"
+INTENT-006432,routing_policy,T3_fattree,0,0,0,0,0,0.0,10.49,"{
+  ""fault_hypothesis"": ""Diverting elephant flows to secondary path s1 -> s3 -> h2 is feasible but may cause performance degradation due to increased latency."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""action"": ""allow"", ""protocol"": "" elephant"", ""ports"":"
+INTENT-007105,routing_policy,T3_fattree,0,1,1,1,0,0.8,3.785,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.1 completely off s1-eth1 is feasible but requires rerouting traffic to a different path."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1-eth1"", ""params"": {""destination"": ""s2-eth1""}}
+  ]
+}"
+INTENT-007870,routing_policy,T2_abilene,0,1,1,0,1,0.8,4.646,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.1 completely off s1-eth3 is feasible"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""flow: 10.0.0.1/32 -> any: 0.0.0.0/0, action: drop""}}
+  ]
+}"
+INTENT-007311,routing_policy,T2_abilene,0,1,1,0,1,0.8,4.05,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.3 completely off s1-eth4 is feasible but may require rerouting traffic through other switches to avoid congestion."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {""destination"": ""s2-eth4""}}
+  ]
+}"
+INTENT-005485,routing_policy,T3_fattree,0,0,0,0,0,0.0,10.105,"{
+  ""fault_hypothesis"": ""Diverting elephant flows to secondary path s1 -> s3 -> h3 is feasible but may cause network congestion due to increased path length."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""action"": ""allow"", ""protocol"": ""all"", ""port_range"": """
+INTENT-000241,routing_policy,T3_fattree,0,1,1,0,0,0.95,2.837,"{
+  ""fault_hypothesis"": ""Diverting flows from h3 to secondary path s1 -> s3 -> h3 is not supported in T3_fattree topology"",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-004599,routing_policy,T3_fattree,0,0,0,0,0,0.0,10.171,"{
+  ""fault_hypothesis"": ""Diverting elephant flows to secondary path s1 -> s3 -> h2 is feasible but may cause performance degradation due to increased latency. It is recommended to monitor the network for any signs of congestion or packet loss."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_"
+INTENT-002710,routing_policy,T3_fattree,0,0,0,0,0,0.0,6.467,"{
+  ""fault_hypothesis"": ""Diverting elephant flows to secondary path s1 -> s3 -> h2 is feasible but may cause performance degradation due to increased latency."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow all traffic to s3""}},
+    {""type"": ""a"
+INTENT-007539,routing_policy,T3_fattree,0,1,1,1,0,0.8,3.914,"{
+  ""fault_hypothesis"": ""Steer flows for 10.0.0.2 completely off s1-eth4 is feasible but may require additional configuration to ensure no traffic is lost."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1-eth4"", ""params"": {""action"": ""drop"", ""protocol"": ""all""}}
+  ]
+}"
+INTENT-005705,routing_policy,T2_abilene,0,1,1,0,0,0.0,2.56,"{
+  ""fault_hypothesis"": ""Pin primary forwarding path for 10.0.0.2 through core switch s2"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-003697,routing_policy,T3_fattree,1,1,1,0,1,0.0,2.426,"{
+  ""fault_hypothesis"": ""Pin primary forwarding path for 10.0.0.4 through core switch s3"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007527,routing_policy,T1_tree,0,1,1,0,1,0.8,3.014,"{
+  ""fault_hypothesis"": ""Rerouting traffic from s3-eth1 to s1 due to high loss rate on s3-eth1"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-006855,routing_policy,T1_tree,0,1,1,0,1,0.95,2.652,"{
+  ""fault_hypothesis"": ""Reroute traffic from s3-eth4 to s1"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"
+INTENT-007361,routing_policy,T1_tree,0,1,1,1,0,0.8,3.384,"{
+  ""fault_hypothesis"": ""Rerouting traffic from 10.0.0.1 to s2-eth2 may cause congestion on s2-eth2 due to high pps and loss rate."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth2"", ""params"": {}}
+  ]
+}"
+INTENT-007747,routing_policy,T1_tree,0,1,1,1,0,0.95,3.211,"{
+  ""fault_hypothesis"": ""Reroute traffic from 10.0.0.1 to s3-eth1 is not possible due to lack of available switches"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3-eth1"", ""params"": {}}
+  ]
+}"
+INTENT-006723,routing_policy,T1_tree,0,1,1,0,1,0.8,6.267,"{
+  ""fault_hypothesis"": ""looping path h4 -> s1 -> h3 is not allowed by the routing policy"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""policy"": ""loop-free""}},
+    {""type"": ""acl_add"", ""target"": ""h3"", ""params"": {""policy"": ""loop-free""}},
+    {""type"": ""acl_re"
+INTENT-005260,routing_policy,T3_fattree,0,1,1,1,0,0.8,3.578,"{
+  ""fault_hypothesis"": ""Reroute transit traffic away from congested link s3-eth3 via switch s3 is feasible but may cause network instability due to lack of available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-002144,routing_policy,T1_tree,0,1,1,0,1,0.95,5.77,"{
+  ""fault_hypothesis"": ""loop-free routing policy enforced successfully on critical subnet"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s2"", ""params"": {""rule"": ""allow h3 -> s2 -> h2""}},
+    {""type"": ""acl_add"", ""target"": ""h2"", ""params"": {""rule"": ""allow h3 -> s2 -> h2""}},
+"
+INTENT-007161,routing_policy,T1_tree,0,1,1,1,0,0.65,3.593,"{
+  ""fault_hypothesis"": ""Rerouting traffic from 10.0.0.3 to s2-eth4 may cause network congestion due to high pps on s2-eth4."",
+  ""confidence"": 0.65,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2-eth4"", ""params"": {}}
+  ]
+}"
+INTENT-003006,routing_policy,T1_tree,0,1,1,0,1,0.8,7.1,"{
+  ""fault_hypothesis"": ""Diverting elephant flows to secondary path s1 -> s3 -> h4 is feasible but may cause network congestion due to increased CPU usage on s3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""rule"": ""allow all traffic to s3""}},
+    {""type"":"
+INTENT-007287,security,T2_abilene,0,0,0,0,0,0.0,12.198,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is feasible but requires rerouting traffic through available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s2"", ""param"
+INTENT-003627,security,T1_tree,0,1,1,0,1,0.99,4.249,"{
+  ""fault_hypothesis"": ""rate_limit_exceeded_on_port_s2_eth4"",
+  ""confidence"": 0.99,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""port"": ""eth4""}}
+  ]
+}"
+INTENT-007731,security,T2_abilene,0,0,0,0,0,0.0,9.478,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.3 is feasible but requires rerouting traffic through available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s2"", ""param"
+INTENT-004485,security,T2_abilene,0,1,1,0,1,0.8,7.0,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s3 may not isolate compromised host h1 if s3 is not directly connected to h1."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-007056,security,T3_fattree,0,1,1,1,0,0.8,4.479,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.1 is feasible but requires configuration changes to the network."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""s2-eth4"", ""params"": {}},
+    {""type"": ""acl_add"", ""target"": ""s2-eth4"""
+INTENT-007347,security,T2_abilene,0,1,1,0,0,0.0,3.055,"{""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 is not feasible due to lack of available switches to reroute traffic"", ""confidence"": 0.0, ""actions"": []}"
+INTENT-007891,security,T1_tree,0,1,1,0,0,0.0,2.646,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.3 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007135,security,T1_tree,0,1,1,0,0,0.0,2.746,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007796,security,T2_abilene,0,1,1,0,1,0.8,3.951,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is feasible but requires rerouting traffic through a different path."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""dst"": ""10.0.0.2"", ""next_hop"": ""s3""}}
+  ]
+}"
+INTENT-007867,security,T2_abilene,0,1,1,0,1,0.8,4.185,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is feasible but requires rerouting traffic through a different path."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""dst"": ""10.0.0.2"", ""next_hop"": ""s1""}}
+  ]
+}"
+INTENT-006913,security,T3_fattree,0,1,1,0,0,0.0,3.649,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.1 is not feasible due to lack of available switches to reroute traffic through."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-000767,security,T1_tree,0,1,1,0,1,0.8,5.051,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s3 may not effectively isolate compromised host h2, as s3 is not directly connected to h2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-006365,security,T3_fattree,0,1,1,0,0,0.0,6.536,"{
+  ""fault_hypothesis"": ""suspect_host_h2_is_up_and_healthy"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-002807,security,T2_abilene,0,1,1,0,1,0.95,3.162,"{
+  ""fault_hypothesis"": ""rate_limit_exceeded_on_port_s1_eth2"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth2""}}
+  ]
+}"
+INTENT-007644,security,T1_tree,0,1,1,0,0,0.0,2.628,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.3 is not feasible due to lack of available switches to reroute traffic through."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-001177,security,T3_fattree,0,1,1,1,0,0.5,3.703,"{
+  ""fault_hypothesis"": ""suspect_host_h2_has_high_udp_traffic"",
+  ""confidence"": 0.5,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s3-eth1"", ""params"": {""protocol"": ""udp"", ""src_port"": 68, ""dst_port"": 68}}
+  ]
+}"
+INTENT-001305,security,T2_abilene,0,1,1,0,0,0.0,3.252,"{
+  ""fault_hypothesis"": ""Deny ingress traffic with source IP 10.0.0.2 targeting service on 10.0.0.1"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006822,security,T1_tree,0,1,1,0,0,0.0,2.622,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007014,security,T3_fattree,0,1,1,0,1,0.8,3.819,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is feasible but requires configuration changes to enforce null routing on the specified host."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""h10"", ""params"": {""null_route"": ""true"""
+INTENT-006973,security,T1_tree,0,1,1,0,0,0.0,2.353,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-000378,security,T1_tree,0,1,1,0,0,0.0,3.004,"{
+  ""fault_hypothesis"": ""Block all ingress UDP flood packets from suspect host h3 (10.0.0.3) due to lack of available hosts"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006847,security,T3_fattree,0,1,1,0,0,0.0,2.601,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006809,security,T2_abilene,0,0,0,0,0,0.0,9.284,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 on T2_abilene is feasible but requires rerouting traffic through available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"""
+INTENT-002112,security,T3_fattree,0,1,1,1,0,0.8,3.328,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s3 may not effectively isolate compromised host h4, as s3 is not directly connected to h4."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-003632,security,T3_fattree,0,1,1,1,0,0.8,3.135,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s2 may not isolate compromised host h1 effectively due to the lack of available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-006862,security,T1_tree,0,1,1,0,0,0.0,2.435,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007255,security,T3_fattree,0,1,1,0,0,0.0,2.617,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is not feasible due to lack of available switches to reroute traffic through."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-004385,security,T2_abilene,0,1,1,0,1,0.95,3.324,"{
+  ""fault_hypothesis"": ""rate_limit_exceeded_on_port_s2_eth1"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s2"", ""params"": {""port"": ""eth1""}}
+  ]
+}"
+INTENT-001915,security,T2_abilene,1,1,1,0,0,0.8,3.539,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s2 may not effectively isolate compromised host h3, as s2 is not the primary access point for h3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-006472,security,T1_tree,0,1,1,1,0,0.8,3.482,"{
+  ""fault_hypothesis"": ""Denying ingress traffic with source IP 10.0.0.1 targeting service on 10.0.0.3 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""None"", ""params"": {}}
+  ]
+}"
+INTENT-001398,security,T1_tree,0,1,1,0,0,0.0,2.749,"{
+  ""fault_hypothesis"": ""Deny ingress traffic with source IP 10.0.0.2 targeting service on 10.0.0.4 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-004104,security,T3_fattree,0,1,1,1,0,0.8,3.187,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s3 may not isolate compromised host h3 effectively due to the lack of available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-006761,security,T1_tree,0,1,1,0,0,0.0,2.502,"{
+  ""fault_hypothesis"": ""Block all ingress UDP flood packets from suspect host h1 (10.0.0.1) due to lack of available switches to reroute traffic"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006253,security,T2_abilene,0,1,1,0,0,0.0,2.862,"{
+  ""fault_hypothesis"": ""Block all ingress UDP flood packets from suspect host h4 (10.0.0.4) due to lack of available switches to reroute traffic"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007979,security,T2_abilene,1,1,1,0,1,0.0,2.605,"{""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is not feasible due to lack of available switches to reroute traffic"", ""confidence"": 0.0, ""actions"": []}"
+INTENT-007018,security,T2_abilene,0,1,1,0,1,0.8,3.955,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.1 is feasible but requires rerouting traffic through a different path."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""dst"": ""10.0.0.1"", ""next_hop"": ""s3""}}
+  ]
+}"
+INTENT-002635,security,T1_tree,0,1,1,0,1,0.8,3.188,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s3 may not effectively isolate compromised host h2, as s3 is not the primary access point for h2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s3"", ""params"": {}}
+  ]
+}"
+INTENT-006172,security,T2_abilene,0,1,1,0,1,0.8,3.38,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s2 may not effectively isolate compromised host h2, as s2 is not the primary access point for h2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-007765,security,T2_abilene,0,1,1,0,1,0.8,4.316,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is feasible but requires rerouting traffic through a different path to avoid the malicious actor."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s2"", ""params"": {""destination"": ""s1"", ""p"
+INTENT-007226,security,T1_tree,0,1,1,0,0,0.0,3.132,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.1 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007964,security,T3_fattree,0,1,1,0,0,0.0,2.597,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.1 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007451,security,T3_fattree,0,0,0,0,0,0.0,9.352,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 is feasible but requires configuration changes to the network."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""config_revert"", ""target"": ""h1"", ""params"": {}},
+    {""type"": ""config_revert"", ""target"": ""h2"", ""p"
+INTENT-007944,security,T2_abilene,0,1,1,0,1,0.8,4.036,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 by rerouting traffic through a different path on the network"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {""dst"": ""10.0.0.4"", ""src"": ""s3-eth2""}}
+  ]
+}"
+INTENT-006807,security,T1_tree,0,1,1,0,0,0.0,2.508,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.3 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006897,security,T1_tree,0,1,1,0,0,0.0,2.401,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.3 is not feasible due to lack of available switches to reroute traffic through."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-004717,security,T3_fattree,0,1,1,0,1,0.8,3.112,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s2 may not isolate compromised host h1 effectively due to the lack of available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""h1"", ""params"": {}}
+  ]
+}"
+INTENT-001008,security,T2_abilene,0,1,1,0,1,0.95,2.983,"{
+  ""fault_hypothesis"": ""rate_limit_exceeded_on_port_s1_eth1"",
+  ""confidence"": 0.95,
+  ""actions"": [
+    {""type"": ""rate_limit"", ""target"": ""s1"", ""params"": {""port"": ""eth1""}}
+  ]
+}"
+INTENT-007111,security,T2_abilene,0,0,0,0,0,0.0,9.487,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 is feasible but requires rerouting traffic through available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s2"", ""param"
+INTENT-000140,security,T2_abilene,0,1,1,0,1,0.8,3.529,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s2 may not effectively isolate compromised host h2, as s2 is not the primary entry point for h2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-007138,security,T3_fattree,0,1,1,0,0,0.0,2.781,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.1 is not feasible due to lack of available switches to reroute traffic through."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-001867,security,T2_abilene,0,0,0,0,0,0.0,4.597,"{
+  ""fault_hypothesis"": ""Block all ingress UDP flood packets from suspect host h2 (10.0.0.2) is feasible but requires ACL configuration on the switch"",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s1"", ""params"": {""protocol"": ""udp"", ""src_port"": 68, ""dst_port"": 68, ""dst_mac"":"
+INTENT-007648,security,T1_tree,1,1,1,0,1,0.95,2.483,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.2 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-006285,security,T3_fattree,0,1,1,0,0,0.0,2.87,"{
+  ""fault_hypothesis"": ""Deny ingress traffic with source IP 10.0.0.1 targeting service on 10.0.0.4 is infeasible due to lack of available switches"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-007873,security,T1_tree,0,1,1,0,0,0.95,2.637,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.95,
+  ""actions"": []
+}"
+INTENT-004508,security,T1_tree,0,1,1,0,1,0.8,3.112,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s2 may not effectively isolate compromised host h3, as s2 is not directly connected to h3."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s2"", ""params"": {}}
+  ]
+}"
+INTENT-007329,security,T3_fattree,0,0,0,0,0,0.0,4.225,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.4 is feasible but requires configuration changes to the network."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""acl_add"", ""target"": ""s3-eth2"", ""params"": {""action"": ""accept"", ""protocol"": ""all"", ""source"": ""10."
+INTENT-007004,security,T2_abilene,0,0,0,0,0,0.0,9.426,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.1 is feasible but requires rerouting traffic through available switches."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""reroute"", ""target"": ""s1"", ""params"": {}},
+    {""type"": ""reroute"", ""target"": ""s2"", ""param"
+INTENT-007683,security,T1_tree,1,1,1,0,1,0.0,2.553,"{
+  ""fault_hypothesis"": ""Null-route all traffic originating from malicious actor 10.0.0.3 is not feasible due to lack of available switches to reroute traffic."",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-006297,security,T2_abilene,0,1,1,0,0,0.0,2.753,"{
+  ""fault_hypothesis"": ""Deny ingress traffic with source IP 10.0.0.1 targeting service on 10.0.0.3"",
+  ""confidence"": 0.0,
+  ""actions"": []
+}"
+INTENT-001290,security,T1_tree,0,1,1,0,1,0.8,3.188,"{
+  ""fault_hypothesis"": ""Installing drop rules at access switch s1 may not effectively isolate compromised host h2, as s1 is not the primary entry point for h2."",
+  ""confidence"": 0.8,
+  ""actions"": [
+    {""type"": ""noop"", ""target"": ""s1"", ""params"": {}}
+  ]
+}"

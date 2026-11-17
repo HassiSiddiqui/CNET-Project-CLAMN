@@ -1,0 +1,8 @@
+Metric,Measured Value,Simulator Assumed Value
+Samples Evaluated,300,"3,960"
+JSON Syntax Validity (\%),92.3,100.0 (structural)
+Schema Compliance (\%),92.3,100.0 (structural)
+Diagnostic Accuracy $p_{\text{diag}}$ (\%),46.9,85.0
+Hallucination Rate $p_{\text{hal}}$ (\%),23.0,10.0
+Adversarial Rejection Rate (\%),37.9,--
+Mean Inference Latency (ms),4162.2,"1,500.0"

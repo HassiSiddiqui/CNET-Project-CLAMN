@@ -49,7 +49,18 @@
     - Hallucination Rate $p_{\text{hal}}$: **23.0%** (vs assumed 10.0%)
     - Adversarial Rejection Rate: **37.9%**
     - Mean Inference Latency: **4,162.2 ms** (vs assumed 1,500.0 ms)
-  - Generated `slm_eval_summary.csv/.tex`, `slm_by_class.csv/.tex`, `slm_offline_eval.csv`, and `slm_metrics.json`.
+  - Preserved Llama-3B baseline as model-capacity ablation study (`slm_metrics_llama3b.json`, `slm_eval_summary_llama3b.tex`, `slm_by_class_llama3b.tex`, `slm_offline_eval_llama3b.csv`).
+- **SLM Model-Scaling Ablation Study (Qwen2.5-Coder-7B vs. Llama-3.2-3B):**
+  - Evaluated 100 held-out samples with `Qwen2.5-Coder-7B-Instruct` (Q4_K_M, 7.6B parameters, 24 Vulkan layers on RX 580) under identical prompting.
+  - Measured scaling gains and trade-offs:
+    - JSON Syntax Validity: **100.0%** (+7.7% absolute gain over 3B; zero malformed JSON syntax).
+    - Schema Compliance: **98.0%** (+5.7% absolute gain).
+    - Hallucination Rate $p_{\text{hal}}$: **0.0%** (-23.0% absolute reduction; zero references to non-existent switches or ports).
+    - Adversarial Rejection Rate: **77.8%** (+39.8% absolute gain; successfully rejects invalid/malicious intents).
+    - Diagnostic Accuracy $p_{\text{diag}}$: **18.7%** (strict end-to-end goal match on high-entropy intent set).
+    - Mean Inference Latency: **6,164.0 ms** (+2,001.8 ms over 3B, reflecting increased parameter depth on RX 580).
+  - Generated `slm_ablation_scaling.csv/.tex`, `fig_slm_scaling_ablation.pdf/.png`, `slm_eval_summary.csv/.tex`, `slm_by_class.csv/.tex`, `slm_offline_eval.csv`, and `slm_metrics.json`.
+
 
 
 

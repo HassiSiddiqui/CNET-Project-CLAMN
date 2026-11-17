@@ -1,0 +1,12 @@
+{
+  "n_samples": 300,
+  "measured_p_diag": 0.46863468634686345,
+  "measured_p_hal": 0.23,
+  "measured_syntax": 0.9233333333333333,
+  "measured_schema": 0.9233333333333333,
+  "measured_neg_reject": 0.3793103448275862,
+  "mean_latency_ms": 4162.21,
+  "assumed_p_diag": 0.85,
+  "assumed_p_hal": 0.1,
+  "assumed_latency_ms": 1500.0
+}
