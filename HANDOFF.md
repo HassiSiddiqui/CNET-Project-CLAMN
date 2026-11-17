@@ -21,3 +21,17 @@
 - **Post-Hoc Variant CL-ANM-v2:** Implemented partial rollback, pipelined LLM/twin dry-run overlap, and L3 threshold >= 0. Evaluated on the identical 30 eval seeds (1001–1030). Generated `v2_comparison.csv/.tex` and `v2_scenario_breakdown.csv/.tex`.
 - **Figures:** Generated `fig_v2_comparison`, `fig_unseen_faults`, and `fig_v2_mttr_scenario` alongside re-verified core simulator figures (`fig_ablation`, `fig_cdf_km`, `fig_lat_loss`, `fig_overhead`, `fig_scenarios`, `fig_sensitivity`).
 
+## STAGE 3 — Mininet Harness Implementation
+- **Status:** PASS
+- **Harness Architecture (`simeval_mn/`):**
+  - `mn_topo.py`: Mininet topology generator for T1 (3-switch tree, 4 hosts) and T2 (11-switch Abilene, 11 hosts) configured with Open vSwitch userspace datapath (`datapath='user'`) and TCLink shaping.
+  - `mn_telemetry.py`: 1 Hz polling via `ovs-ofctl dump-ports` for real-time rx/tx byte counters, packet drop counters, and link utilization delta calculation.
+  - `mn_faults.py`: Realistic live network fault injectors for S1 (tc rate-limiting/link down), S2 (hping3 UDP/SYN flood), S3 (OVS drop rule misconfiguration), S4 (cascading failure), and S5 (link failure + DDoS). Includes teardown cleanup (`clear_faults`).
+  - `mn_controller.py`: Live OpenFlow flow table manager and decision executor connecting simeval controller logic with physical OVS switches (`ovs-ofctl add-flow/del-flow` for ACL drops and traffic control).
+  - `run_mn.py`: Resumable experiment harness writing results row-by-row to `results/mn/runs_mn.csv`.
+- **Verification & Benchmarking:**
+  - Tested with `--dry-run` to verify end-to-end import chain, argument handling, and topology dispatch.
+  - Benchmarked live episode duration on WSL2: exactly 90.0 s per episode (matching physical 90 s simulation time).
+  - Live execution verified: initial episodes logged in `results/mn/runs_mn.csv`.
+
+

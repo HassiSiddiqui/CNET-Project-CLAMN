@@ -1,0 +1,3 @@
+topology,scenario,config,seed,recovered,throughput_recovery_s,mttr_s,packet_loss_pct,availability_pct,actions_applied,actions_accepted,wall_s,fallback
+T1_tree,S2_ddos,B0,3001,0,70,70,55.155674116854534,57.10114235355761,0,0,90.0,0
+T1_tree,S2_ddos,B0,3002,0,70,70,13.696345410388469,89.34728690303119,0,0,90.0,0
