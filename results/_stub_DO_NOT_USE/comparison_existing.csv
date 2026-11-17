@@ -1,0 +1,7 @@
+paper,metric,config,our_value,ref_value,delta,limitation
+Makiyah et al.,packet_loss_pct,B0,2.467,18.4,-15.933,Different topology/implementation; qualitative comparison only
+Makiyah et al.,packet_loss_pct,B2,2.709,9.7,-6.991,Different topology/implementation; qualitative comparison only
+Makiyah et al.,packet_loss_pct,FULL,2.709,3.2,-0.491,Different topology/implementation; qualitative comparison only
+Mwangi et al. (OMARF),latency_reduction_pct,FULL vs B0,0.0,28.3,-28.3,OMARF uses OSPF; we use OVS/Ryu; direct comparison approximate
+Mwangi et al. (OMARF),throughput_recovery_improvement_pct,FULL vs B0,80.74,23.0,57.74,Episode length differs (90s vs 5min); normalised per-episode
+Lira et al.,slm_eval,pending,,,,SLM offline eval not yet run; deferred to ablation phase
