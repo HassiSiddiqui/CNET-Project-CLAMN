@@ -4,8 +4,21 @@
 \usepackage[margin=0.72in]{geometry}
 \usepackage{mathpazo}
 \usepackage{amsmath,amssymb}
-\usepackage{graphicx,booktabs,tabularx,url,microtype,caption,xcolor,cite}
+\usepackage{graphicx,booktabs,tabularx,url,microtype,caption,xcolor,cite,placeins}
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% Balanced float placement parameters
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.80}
+\setcounter{topnumber}{4}
+\setcounter{bottomnumber}{3}
+\setcounter{totalnumber}{6}
+\setcounter{dbltopnumber}{3}
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\dblfloatpagefraction}{0.80}
+
 \emergencystretch=3em
 \tolerance=2500
 \hbadness=2500
@@ -63,7 +76,7 @@ B0 unmanaged; B1 unguarded LLM; B2 deterministic rules; B3 single DQN~\cite{dqn}
 \subsection{Assumed vs.\ Measured SLM Parameters}
 The simulator uses an error model ($p_\text{diag}{=}0.85$, $p_\text{hal}{=}0.10$, latency lognormal $\mu{=}1.5$\,s). These are \emph{assumptions}. Table~\ref{tab:assump} contrasts them with values measured on hardware.
 
-\begin{table}[t]\centering\small
+\begin{table}[!htbp]\centering\small
 \caption{Assumed simulation vs.\ empirically measured parameters.}\label{tab:assump}
 \begin{tabularx}{\columnwidth}{lXX}
 \toprule
@@ -89,11 +102,26 @@ TRT: time from onset until goodput $\ge95$\% for 5\,s. MTTR: TRT plus watch wind
 \section{Results}\label{sec:results}
 
 \subsection{Overall Benchmark}
-\begin{table*}[t]\centering\footnotesize
-\caption{Pooled results across 3,960 episodes (12 cells $\times$ 30 seeds). MTTR and TRT censored at 70\,s.}\label{tab:main}
+
+\begin{figure*}[!t]\centering
+\begin{minipage}[t]{0.58\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig_cdf_km.pdf}
+  \caption{MTTR cumulative distribution function (left) and Kaplan--Meier recovery survival curves (right) across 3,960 episodes.}\label{fig:cdf_km}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.39\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig_lat_loss.pdf}
+  \caption{Mean packet loss vs.\ p95 latency with 95\% bootstrap CIs.}\label{fig:lat_loss}
+\end{minipage}
+\end{figure*}
+
+\begin{table*}[!t]\centering\footnotesize
+\caption{Pooled benchmark performance (top) and safety/overhead (bottom) across 3,960 episodes (12 cells $\times$ 30 seeds).}\label{tab:main}\label{tab:over}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrrrr}
 \toprule
+\multicolumn{7}{l}{\textbf{(a) Pooled Performance Metrics (MTTR and TRT censored at 70\,s)}} \\
 Configuration & Recovered (\%) & MTTR (s) & TRT (s) & Loss (\%) & Avail. (\%) & p95 lat. (ms) \\
 \midrule
 B0 Unmanaged & 7.8 [5.3, 10.8] & 64.9 [63.1, 66.6] & 64.6 [62.6, 66.5] & 36.6 [34.1, 39.2] & 64.1 [62.0, 66.2] & 188.8 [172.6, 205.2] \\
@@ -108,14 +136,11 @@ A4 w/o rollback & 88.1 [84.7, 91.4] & 19.4 [17.5, 21.5] & 15.0 [12.8, 17.3] & 8.
 A5 w/o graph enc. & 87.5 [84.2, 90.8] & 26.9 [24.9, 28.9] & 15.8 [13.9, 17.9] & 8.7 [7.3, 10.1] & 92.0 [90.8, 93.0] & 158.2 [147.1, 169.8] \\
 A6 debate always-on & 88.1 [84.4, 91.4] & 26.3 [24.3, 28.2] & 14.7 [12.6, 17.0] & 8.5 [7.1, 9.9] & 92.3 [91.1, 93.4] & 162.1 [151.1, 173.4] \\
 \bottomrule
-\end{tabular}}
-\end{table*}
-
-\begin{table*}[t]\centering\footnotesize
-\caption{Safety and overhead across 3,960 episodes.}\label{tab:over}
-\resizebox{0.95\textwidth}{!}{%
+\end{tabular}}\\[4pt]
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrrrrrr}
 \toprule
+\multicolumn{9}{l}{\textbf{(b) Safety, Verification, and Rollback Overhead}} \\
 Configuration & LLM calls & Tokens & Ctl ms/ep & Invalid gen. (\%) & Invalid exec. (\%) & Rejected & Rollbacks & Fallback (\%) \\
 \midrule
 B0 Unmanaged & 0.0 & 0 & 0 & -- & -- & 0.00 & 0.00 & 0 \\
@@ -133,77 +158,71 @@ A6 debate always-on & 19.0 & 5641 & 19 & 7.1 & 0.1 & 1.58 & 0.08 & 41 \\
 \end{tabular}}
 \end{table*}
 
-All active controllers vastly outperform unmanaged B0 (7.8\% recovery). B3 (DQN) achieves best MTTR (9.7\,s) and lowest loss (2.8\%). CL-ANM's MTTR is 26.6\,s [24.7, 28.6] --- significantly worse than B1, B2, B3, A4 (Holm-corrected Mann-Whitney, Cliff's $\delta = 0.72, 0.59, 0.88, 0.53$; all $p{<}10^{-3}$). Verification reduces invalid executions from 8.3\% (B1) to 0.1\% (FULL). CL-ANM fell back to rules in 44\% of episodes.
+All active controllers vastly outperform unmanaged B0 (7.8\% recovery, Table~\ref{tab:main}). B3 (DQN) achieves best MTTR (9.7\,s) and lowest loss (2.8\%). CL-ANM's MTTR is 26.6\,s [24.7, 28.6] --- significantly worse than B1, B2, B3, A4 (Holm-corrected Mann-Whitney, Cliff's $\delta = 0.72, 0.59, 0.88, 0.53$; all $p{<}10^{-3}$). Verification reduces invalid executions from 8.3\% (B1) to 0.1\% (FULL). CL-ANM fell back to rules in 44\% of episodes. Figure~\ref{fig:cdf_km} shows the MTTR CDF and Kaplan--Meier curves, while Figure~\ref{fig:lat_loss} plots loss versus latency.
 
 \subsection{Scenario Breakdown}
 
-\begin{table}[t]\centering\footnotesize
-\caption{Recovery rate (\%) per scenario.}\label{tab:rec}
-\resizebox{\columnwidth}{!}{%
+\begin{figure*}[!t]\centering
+\begin{minipage}[t]{0.49\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig_scenarios.pdf}
+  \caption{Recovery rate and MTTR per scenario.}\label{fig:scenarios}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig_ablation.pdf}
+  \caption{Ablation effects relative to CL-ANM.}\label{fig:ablation}
+\end{minipage}
+\end{figure*}
+
+\begin{table*}[!t]\centering\footnotesize
+\caption{Scenario breakdown across S1--S5: recovery rate (\%) and mean MTTR (s, censored at 70\,s).}\label{tab:rec}\label{tab:mttr}
 \begin{tabular}{lrrrrrrrrrrr}
 \toprule
 Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
 \midrule
+\multicolumn{12}{l}{\textit{(a) Recovery Rate (\%)}} \\
 S1 Link failure & 21.7 & 100.0 & 95.0 & 88.3 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
 S2 DDoS & 14.4 & 92.2 & 100.0 & 95.6 & 100.0 & 98.9 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
 S3 Misconfig & 2.2 & 100.0 & 20.0 & 97.8 & 100.0 & 95.6 & 92.2 & 100.0 & 100.0 & 100.0 & 100.0 \\
 S4 Cascading & 0.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
 S5 Compound & 0.0 & 85.0 & 100.0 & 95.0 & 25.0 & 13.3 & 36.7 & 20.0 & 28.3 & 25.0 & 28.3 \\
-\bottomrule
-\end{tabular}}
-\end{table}
-
-\begin{table}[t]\centering\footnotesize
-\caption{Mean MTTR (s) per scenario (70 = unrecovered).}\label{tab:mttr}
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{lrrrrrrrrrrr}
-\toprule
-Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
 \midrule
+\multicolumn{12}{l}{\textit{(b) Mean MTTR (seconds)}} \\
 S1 Link failure & 55.9 & 9.6 & 9.1 & 13.3 & 17.4 & 18.7 & 14.1 & 17.9 & 11.8 & 19.2 & 17.3 \\
 S2 DDoS & 60.6 & 13.0 & 5.9 & 9.5 & 20.2 & 20.4 & 17.5 & 19.8 & 12.7 & 21.4 & 19.2 \\
 S3 Misconfig & 68.6 & 9.3 & 57.2 & 7.4 & 17.0 & 16.9 & 19.0 & 16.5 & 10.8 & 15.6 & 17.5 \\
 S4 Cascading & 70.0 & 12.4 & 6.0 & 6.0 & 27.0 & 25.7 & 25.4 & 28.5 & 15.2 & 26.8 & 27.3 \\
 S5 Compound & 70.0 & 24.6 & 10.0 & 13.5 & 59.5 & 65.9 & 54.9 & 63.2 & 54.0 & 59.8 & 58.2 \\
 \bottomrule
-\end{tabular}}
-\end{table}
+\end{tabular}
+\end{table*}
 
-CL-ANM recovers 100\% of S1--S4 episodes. In S3 (misconfiguration) it substantially outperforms B2 rules (100\% vs.\ 20\%). In S5 (compound), however, its recovery collapses to 25\% while B1, B2, B3 achieve 85--100\%. Tracing per-episode link states: on Abilene S5, CL-ANM loses 2.35 links to overload collapse on average (B1: 0.15, B2: 0.05). The SLM call, dry run, and watch window cumulatively delay flood mitigation past the 8\,s cascade threshold.
-
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{fig_cdf_km.pdf}
-\caption{MTTR CDF (left) and Kaplan--Meier recovery curves (right).}
-\end{figure}
-
-\begin{figure}[t]\centering
-\includegraphics[width=0.88\columnwidth]{fig_lat_loss.pdf}
-\caption{Mean packet loss vs.\ p95 latency with 95\% CIs.}
-\end{figure}
-
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{fig_scenarios.pdf}
-\caption{Recovery rate and MTTR per scenario.}
-\end{figure}
+CL-ANM recovers 100\% of S1--S4 episodes (Table~\ref{tab:rec}, Figure~\ref{fig:scenarios}). In S3 (misconfiguration) it substantially outperforms B2 rules (100\% vs.\ 20\%). In S5 (compound), however, its recovery collapses to 25\% while B1, B2, B3 achieve 85--100\%. Tracing per-episode link states: on Abilene S5, CL-ANM loses 2.35 links to overload collapse on average (B1: 0.15, B2: 0.05). The SLM call, dry run, and watch window cumulatively delay flood mitigation past the 8\,s cascade threshold.
 
 \subsection{Ablation Analysis}
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{fig_ablation.pdf}
-\caption{Ablation effects relative to CL-ANM.}\label{fig:ablation}
-\end{figure}
-
-A1 (no verification): invalid executions rise to 6.3\%, recovery drops to 84.2\%. A2 (no debate): LLM calls fall from 14.9 to 3.5/ep; MTTR improves slightly (24.9\,s), recovery unchanged---debate's diagnostic accuracy gain (79\%\,$\to$\,91\%) is absorbed by the verifier. A3, A5, A6 are statistically indistinguishable from FULL (Holm $p{=}0.28, 1.0, 1.0$). A4 (no rollback): MTTR \emph{improves} to 19.4\,s---rollback undoes correct partial mitigations when transient overload masks goodput recovery.
+A1 (no verification): invalid executions rise to 6.3\%, recovery drops to 84.2\% (Figure~\ref{fig:ablation}). A2 (no debate): LLM calls fall from 14.9 to 3.5/ep; MTTR improves slightly (24.9\,s), recovery unchanged---debate's diagnostic accuracy gain (79\%\,$\to$\,91\%) is absorbed by the verifier. A3, A5, A6 are statistically indistinguishable from FULL (Holm $p{=}0.28, 1.0, 1.0$). A4 (no rollback): MTTR \emph{improves} to 19.4\,s---rollback undoes correct partial mitigations when transient overload masks goodput recovery.
 
 \subsection{Sensitivity to Assumed Error Rates}
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{fig_sensitivity.pdf}
-\caption{Sensitivity to assumed $p_\text{hal}$ on Abilene (15 seeds).}\label{fig:sens}
-\end{figure}
+As $p_\text{hal}$ rises from 0.0 to 0.30: B1 recovery falls 94\%\,$\to$\,82\%; CL-ANM recovery rises (0.81\,$\to$\,0.93) and executes zero invalid actions (Figure~\ref{fig:sens}). CL-ANM's MTTR becomes comparable to B1's only at $p_\text{hal}{\approx}0.30$.
 
-As $p_\text{hal}$ rises from 0.0 to 0.30: B1 recovery falls 94\%\,$\to$\,82\%; CL-ANM recovery rises (0.81\,$\to$\,0.93) and executes zero invalid actions. CL-ANM's MTTR becomes comparable to B1's only at $p_\text{hal}{\approx}0.30$.
+\begin{figure*}[!t]\centering
+\begin{minipage}[t]{0.49\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig_sensitivity.pdf}
+  \caption{Sensitivity to assumed $p_\text{hal}$ on Abilene (15 seeds).}\label{fig:sens}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig_unseen_faults.pdf}
+  \caption{Recovery and MTTR on unseen fault families U1--U4.}\label{fig:unseen}
+\end{minipage}
+\end{figure*}
 
 \subsection{Unseen Fault Generalisation}\label{sec:unseen}
-\begin{table}[t]\centering\footnotesize
+CL-ANM maintains high recovery on U1 (hyper-DDoS, 100\%) and U3 (dual-link, 93.3\%), but collapses under U2 (rapid cascade, 4\,s window, 100\%) and U4 (compound storm, 75\%) as shown in Table~\ref{tab:unseen} and Figure~\ref{fig:unseen}. Performance boundaries track cascade velocity.
+
+\begin{table}[!htbp]\centering\footnotesize
 \caption{Held-out unseen fault families (1,440 episodes, seeds 2001--2030).}\label{tab:unseen}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{llllllll}
@@ -220,19 +239,12 @@ CL-ANM-v2 (post-hoc) & 93.8 & 23.2 & 12.1 & 7.2 & 93.3 & 156.3 & 61.3 \\
 \end{tabular}}
 \end{table}
 
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{fig_unseen_faults.pdf}
-\caption{Recovery and MTTR on unseen fault families U1--U4.}
-\end{figure}
-
-CL-ANM maintains high recovery on U1 (hyper-DDoS, 100\%) and U3 (dual-link, 93.3\%), but collapses under U2 (rapid cascade, 4\,s window, 100\%) and U4 (compound storm, 75\%). Performance boundaries track cascade velocity.
-
 \subsection{Post-Hoc Variant: CL-ANM-v2}\label{sec:v2}
-To isolate whether S5 collapse is inherent to guarded architectures or a pipelining artefact, we designed \textbf{CL-ANM-v2}: (1) overlap LLM call with twin state clone; (2) partial rollback reverting only the failing sub-action; (3) L3 threshold $\Delta G\ge0$ instead of $\ge0.01$.
+To isolate whether S5 collapse is inherent to guarded architectures or a pipelining artefact, we designed \textbf{CL-ANM-v2}: (1) overlap LLM call with twin state clone; (2) partial rollback reverting only the failing sub-action; (3) L3 threshold $\Delta G\ge0$ instead of $\ge0.01$. \emph{This variant was designed after seeing results and must be treated as post-hoc.}
 
-\emph{This variant was designed after seeing results and must be treated as post-hoc.}
+CL-ANM-v2 reduces MTTR from 26.6\,s to 18.2\,s (measured in full run; v2 pooled as 25.0\,s in this seed subset), packet loss from 8.7\% to 5.2\%, rule fallback from 44.0\% to 16.8\%, and S5 recovery from 25.0\% to 70.0\% (Table~\ref{tab:v2}, Figure~\ref{fig:v2}). This confirms that decision-pipeline latency---not verification per se---is the primary bottleneck.
 
-\begin{table}[t]\centering\footnotesize
+\begin{table}[!htbp]\centering\footnotesize
 \caption{CL-ANM vs.\ CL-ANM-v2 on same seeds (1001--1030).}\label{tab:v2}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{llllllllll}
@@ -245,15 +257,15 @@ CL-ANM-v2 (post-hoc) & 86.7 & 25.0 & 14.2 & 8.0 & 92.9 & 145.2 & 41.9 & 0.09 & 0
 \end{tabular}}
 \end{table}
 
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{fig_v2_comparison.pdf}
-\caption{CL-ANM vs.\ CL-ANM-v2 recovery and MTTR.}
+\begin{figure}[!htbp]\centering
+\includegraphics[width=0.92\columnwidth]{fig_v2_comparison.pdf}
+\caption{CL-ANM vs.\ CL-ANM-v2 recovery and MTTR.}\label{fig:v2}
 \end{figure}
 
-CL-ANM-v2 reduces MTTR from 26.6\,s to 18.2\,s (measured in full run; v2 pooled as 25.0\,s in this seed subset), packet loss from 8.7\% to 5.2\%, rule fallback from 44.0\% to 16.8\%, and S5 recovery from 25.0\% to 70.0\%. This confirms that decision-pipeline latency---not verification per se---is the primary bottleneck.
-
 \subsection{Mininet Emulation Validation}\label{sec:mn}
-\begin{table}[t]\centering\footnotesize
+Mininet and simulator produce identical ranking: $\text{B3}{\succ}\text{B1}{\succ}\text{FULL}{\succ}\text{B2}{\succ}\text{B0}$ (Table~\ref{tab:mn}, Figure~\ref{fig:mn}). Spearman $\rho{=}1.000$ ($p{<}0.001$), Kendall $\tau{=}1.000$ ($p{=}0.017$).
+
+\begin{table}[!htbp]\centering\footnotesize
 \caption{Sim vs.\ Mininet/OVS configuration rankings.}\label{tab:mn}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{llllll}
@@ -269,15 +281,15 @@ CL-ANM (full) & 87.5 & 87.5 & 26.6 & 26.6 & 8.7 \\
 \end{tabular}}
 \end{table}
 
-Mininet and simulator produce identical ranking: $\text{B3}{\succ}\text{B1}{\succ}\text{FULL}{\succ}\text{B2}{\succ}\text{B0}$. Spearman $\rho{=}1.000$ ($p{<}0.001$), Kendall $\tau{=}1.000$ ($p{=}0.017$).
-
-\begin{figure}[t]\centering
-\includegraphics[width=0.9\columnwidth]{fig_mn_vs_sim.pdf}
-\caption{Sim vs.\ Mininet MTTR correlation ($\rho{=}1.000$).}
+\begin{figure}[!htbp]\centering
+\includegraphics[width=0.85\columnwidth]{fig_mn_vs_sim.pdf}
+\caption{Sim vs.\ Mininet MTTR correlation ($\rho{=}1.000$).}\label{fig:mn}
 \end{figure}
 
 \subsection{SLM Model-Scaling Ablation}\label{sec:slm}
-\begin{table}[t]\centering\footnotesize
+Scaling to 7B eliminates inventory hallucinations ($p_\text{hal}$ 23.0\%\,$\to$\,0.0\%) and achieves 100\% JSON syntax validity (Table~\ref{tab:slm}, Figure~\ref{fig:scaling}). However, goal-level diagnostic accuracy remains low (18.7\%), confirming that formal L1--L3 verifiers remain indispensable even with larger models. Inference latency increases by 2,002\,ms per call.
+
+\begin{table}[!htbp]\centering\footnotesize
 \caption{Llama-3.2-3B vs.\ Qwen2.5-Coder-7B on AMD Vulkan hardware.}\label{tab:slm}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{llll}
@@ -295,13 +307,12 @@ Mean Latency (ms) & 4162.2 & 6164.0 & +2002\,ms \\
 \end{tabular}}
 \end{table}
 
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{fig_slm_scaling_ablation.pdf}
-\caption{Model-scaling trade-offs: syntax, hallucination, adversarial rejection, latency.}
+\begin{figure}[!htbp]\centering
+\includegraphics[width=0.92\columnwidth]{fig_slm_scaling_ablation.pdf}
+\caption{Model-scaling trade-offs: syntax, hallucination, rejection, latency.}\label{fig:scaling}
 \end{figure}
 
-Scaling to 7B eliminates inventory hallucinations ($p_\text{hal}$ 23.0\%\,$\to$\,0.0\%) and achieves 100\% JSON syntax validity. However, goal-level diagnostic accuracy remains low (18.7\%), confirming that formal L1--L3 verifiers remain indispensable even with larger models. Inference latency increases by 2,002\,ms per call.
-
+\FloatBarrier
 %% ============================================================
 \section{Discussion and Limitations}
 \textbf{Supported claims.} (i) Deterministic 3-layer verification removes 98.8\% of invalid executions; (ii) the benefit in recovery rate materialises only when $p_\text{hal}{\ge}0.20$; (iii) debate, graph encoder, and rollback showed no benefit or a cost in this setting; (iv) 7B scaling eliminates hallucinations but widens the latency gap.
@@ -313,60 +324,6 @@ Scaling to 7B eliminates inventory hallucinations ($p_\text{hal}$ 23.0\%\,$\to$\
 CL-ANM integrates SLM diagnosis, multi-role debate, GraphSAGE-PPO path selection, deterministic verification, and rollback in one controller. Verification delivers its safety benefit virtually eliminating invalid executions. The full loop is slower than simpler controllers under fast-cascading overloads, and three of its six ablated components showed no measurable benefit. Post-hoc CL-ANM-v2 demonstrates that pipelining latency---not the verification principle---causes the S5 failure, raising a blueprint for fast, safe autonomous networking. Model scaling eliminates hallucinations but underscores that formal verification remains necessary for semantic correctness.
 
 \textbf{Availability.} Code, results, and analysis scripts: \url{https://github.com/HassiSiddiqui/CNET-Project-CLAMN}
-
-%% ============================================================
-\appendix
-\section{Per-Cell Breakdown Tables}
-
-\begin{table*}[p]\centering\scriptsize
-\caption{Per-cell recovery rate (\%) across all 12 topology$\times$scenario cells (30 seeds each).}\label{tab:percell_rec}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{llrrrrrrrrrrr}
-\toprule
-Topology & Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
-\midrule
-T1 Tree & S2 DDoS & 20.0 & 93.3 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T1 Tree & S3 Misconfig & 0.0 & 100.0 & 0.0 & 93.3 & 100.0 & 93.3 & 90.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
-\midrule
-T2 Abilene & S1 Link fail & 23.3 & 100.0 & 90.0 & 80.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T2 Abilene & S2 DDoS & 10.0 & 93.3 & 100.0 & 90.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T2 Abilene & S3 Misconfig & 6.7 & 100.0 & 16.7 & 100.0 & 100.0 & 96.7 & 93.3 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T2 Abilene & S4 Cascading & 0.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T2 Abilene & S5 Compound & 0.0 & 86.7 & 100.0 & 93.3 & 10.0 & 3.3 & 16.7 & 10.0 & 16.7 & 13.3 & 10.0 \\
-\midrule
-T3 Fat-tree & S1 Link fail & 20.0 & 100.0 & 100.0 & 96.7 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T3 Fat-tree & S2 DDoS & 13.3 & 90.0 & 100.0 & 96.7 & 100.0 & 96.7 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T3 Fat-tree & S3 Misconfig & 0.0 & 100.0 & 43.3 & 100.0 & 100.0 & 96.7 & 93.3 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T3 Fat-tree & S4 Cascading & 0.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
-T3 Fat-tree & S5 Compound & 0.0 & 83.3 & 100.0 & 96.7 & 40.0 & 23.3 & 56.7 & 30.0 & 40.0 & 36.7 & 46.7 \\
-\bottomrule
-\end{tabular}}
-\end{table*}
-
-\begin{table*}[p]\centering\scriptsize
-\caption{Per-cell MTTR (s, censored at 70\,s) across all 12 topology$\times$scenario cells.}\label{tab:percell_mttr}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{llrrrrrrrrrrr}
-\toprule
-Topology & Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
-\midrule
-T1 Tree & S2 DDoS & 57.0 & 12.0 & 5.8 & 6.6 & 21.8 & 21.7 & 19.0 & 18.7 & 12.5 & 22.8 & 20.4 \\
-T1 Tree & S3 Misconfig & 70.0 & 9.4 & 70.0 & 10.3 & 16.8 & 17.7 & 19.8 & 16.5 & 10.9 & 15.6 & 17.4 \\
-\midrule
-T2 Abilene & S1 Link fail & 54.8 & 9.6 & 12.2 & 18.7 & 18.1 & 20.0 & 14.6 & 18.1 & 11.2 & 20.1 & 18.0 \\
-T2 Abilene & S2 DDoS & 63.5 & 13.0 & 5.9 & 13.3 & 18.9 & 19.4 & 15.6 & 19.5 & 12.9 & 20.1 & 18.2 \\
-T2 Abilene & S3 Misconfig & 65.7 & 9.1 & 59.3 & 5.9 & 17.2 & 16.9 & 18.2 & 16.7 & 10.5 & 15.6 & 17.6 \\
-T2 Abilene & S4 Cascading & 70.0 & 11.9 & 6.0 & 6.0 & 34.7 & 25.7 & 36.4 & 35.1 & 14.6 & 33.8 & 36.7 \\
-T2 Abilene & S5 Compound & 70.0 & 23.9 & 10.7 & 15.2 & 65.6 & 68.8 & 65.4 & 67.4 & 60.1 & 67.6 & 66.8 \\
-\midrule
-T3 Fat-tree & S1 Link fail & 57.0 & 9.6 & 6.0 & 7.9 & 16.6 & 17.3 & 13.6 & 17.7 & 12.4 & 18.4 & 16.6 \\
-T3 Fat-tree & S2 DDoS & 61.3 & 13.9 & 5.9 & 8.7 & 19.9 & 20.0 & 17.9 & 21.1 & 12.7 & 21.3 & 18.9 \\
-T3 Fat-tree & S3 Misconfig & 70.0 & 9.3 & 42.3 & 6.0 & 17.0 & 16.1 & 18.9 & 16.5 & 10.9 & 15.6 & 17.4 \\
-T3 Fat-tree & S4 Cascading & 70.0 & 12.8 & 6.0 & 6.0 & 19.2 & 25.7 & 14.4 & 21.9 & 15.8 & 19.7 & 17.9 \\
-T3 Fat-tree & S5 Compound & 70.0 & 25.4 & 9.3 & 11.7 & 53.4 & 63.1 & 44.4 & 59.0 & 48.0 & 51.9 & 49.7 \\
-\bottomrule
-\end{tabular}}
-\end{table*}
 
 %% ============================================================
 \begin{thebibliography}{99}\footnotesize
@@ -388,5 +345,61 @@ T3 Fat-tree & S5 Compound & 70.0 & 25.4 & 9.3 & 11.7 & 53.4 & 63.1 & 44.4 & 59.0
 \bibitem{graphsage}W.~L. Hamilton, R.~Ying, and J.~Leskovec, ``Inductive representation learning on large graphs,'' in \emph{Proc. NeurIPS}, 2017, pp.~10248--10258.
 \bibitem{mininet}B.~Lantz, B.~Heller, and N.~McKeown, ``A network in a laptop: rapid prototyping for software-defined networks,'' in \emph{Proc. ACM HotNets}, 2010.
 \end{thebibliography}
+
+\FloatBarrier
+%% ============================================================
+\appendix
+\onecolumn
+\section{Per-Cell Breakdown Tables}
+
+\begin{table*}[t]\centering\scriptsize
+\caption{Per-cell recovery rate (\%) across all 12 topology$\times$scenario cells (30 seeds each).}\label{tab:percell_rec}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrrrrrrrr}
+\toprule
+Topology & Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
+\midrule
+T1 Tree & S2 DDoS & 20.0 & 93.3 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T1 Tree & S3 Misconfig & 0.0 & 100.0 & 0.0 & 93.3 & 100.0 & 93.3 & 90.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+\midrule
+T2 Abilene & S1 Link fail & 23.3 & 100.0 & 90.0 & 80.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T2 Abilene & S2 DDoS & 10.0 & 93.3 & 100.0 & 90.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T2 Abilene & S3 Misconfig & 6.7 & 100.0 & 16.7 & 100.0 & 100.0 & 96.7 & 93.3 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T2 Abilene & S4 Cascading & 0.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T2 Abilene & S5 Compound & 0.0 & 86.7 & 100.0 & 93.3 & 10.0 & 3.3 & 16.7 & 10.0 & 16.7 & 13.3 & 10.0 \\
+\midrule
+T3 Fat-tree & S1 Link fail & 20.0 & 100.0 & 100.0 & 96.7 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T3 Fat-tree & S2 DDoS & 13.3 & 90.0 & 100.0 & 96.7 & 100.0 & 96.7 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T3 Fat-tree & S3 Misconfig & 0.0 & 100.0 & 43.3 & 100.0 & 100.0 & 96.7 & 93.3 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T3 Fat-tree & S4 Cascading & 0.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+T3 Fat-tree & S5 Compound & 0.0 & 83.3 & 100.0 & 96.7 & 40.0 & 23.3 & 56.7 & 30.0 & 40.0 & 36.7 & 46.7 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
+\vspace{10pt}
+
+\begin{table*}[t]\centering\scriptsize
+\caption{Per-cell MTTR (s, censored at 70\,s) across all 12 topology$\times$scenario cells.}\label{tab:percell_mttr}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrrrrrrrr}
+\toprule
+Topology & Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
+\midrule
+T1 Tree & S2 DDoS & 57.0 & 12.0 & 5.8 & 6.6 & 21.8 & 21.7 & 19.0 & 18.7 & 12.5 & 22.8 & 20.4 \\
+T1 Tree & S3 Misconfig & 70.0 & 9.4 & 70.0 & 10.3 & 16.8 & 17.7 & 19.8 & 16.5 & 10.9 & 15.6 & 17.4 \\
+\midrule
+T2 Abilene & S1 Link fail & 54.8 & 9.6 & 12.2 & 18.7 & 18.1 & 20.0 & 14.6 & 18.1 & 11.2 & 20.1 & 18.0 \\
+T2 Abilene & S2 DDoS & 63.5 & 13.0 & 5.9 & 13.3 & 18.9 & 19.4 & 15.6 & 19.5 & 12.9 & 20.1 & 18.2 \\
+T2 Abilene & S3 Misconfig & 65.7 & 9.1 & 59.3 & 5.9 & 17.2 & 16.9 & 18.2 & 16.7 & 10.5 & 15.6 & 17.6 \\
+T2 Abilene & S4 Cascading & 70.0 & 11.9 & 6.0 & 6.0 & 34.7 & 25.7 & 36.4 & 35.1 & 14.6 & 33.8 & 36.7 \\
+T2 Abilene & S5 Compound & 70.0 & 23.9 & 10.7 & 15.2 & 65.6 & 68.8 & 65.4 & 67.4 & 60.1 & 67.6 & 66.8 \\
+\midrule
+T3 Fat-tree & S1 Link fail & 57.0 & 9.6 & 6.0 & 7.9 & 16.6 & 17.3 & 13.6 & 17.7 & 12.4 & 18.4 & 16.6 \\
+T3 Fat-tree & S2 DDoS & 61.3 & 13.9 & 5.9 & 8.7 & 19.9 & 20.0 & 17.9 & 21.1 & 12.7 & 21.3 & 18.9 \\
+T3 Fat-tree & S3 Misconfig & 70.0 & 9.3 & 42.3 & 6.0 & 17.0 & 16.1 & 18.9 & 16.5 & 10.9 & 15.6 & 17.4 \\
+T3 Fat-tree & S4 Cascading & 70.0 & 12.8 & 6.0 & 6.0 & 19.2 & 25.7 & 14.4 & 21.9 & 15.8 & 19.7 & 17.9 \\
+T3 Fat-tree & S5 Compound & 70.0 & 25.4 & 9.3 & 11.7 & 53.4 & 63.1 & 44.4 & 59.0 & 48.0 & 51.9 & 49.7 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
 
 \end{document}
