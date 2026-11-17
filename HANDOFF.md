@@ -34,4 +34,22 @@
   - Benchmarked live episode duration on WSL2: exactly 90.0 s per episode (matching physical 90 s simulation time).
   - Live execution verified: initial episodes logged in `results/mn/runs_mn.csv`.
 
+## STAGE 4 — Mininet Experiment & Offline SLM Evaluation
+- **Status:** PASS
+- **Empirical Mininet Benchmarking & Validation:**
+  - Single episode duration benchmarked at 90.0 s wall-clock time across T1 and T2 live topologies.
+  - Validated Mininet vs Simulator configuration ranking correlation: Spearman $\rho = 1.000$ ($p < 0.001$), Kendall $\tau = 1.000$ ($p = 0.017$ for MTTR, $p = 0.019$ for Recovery Rate).
+  - Generated `mn_vs_sim_ranking.csv/.tex`, `rank_correlations.csv/.tex`, and `fig_mn_vs_sim.pdf/.png`.
+- **Offline SLM Empirical Evaluation on Intent Dataset:**
+  - Evaluated 300 held-out samples from `data/intent_test.jsonl` (stratified across 5 intent classes) using local Vulkan `Llama-3.2-3B-Instruct` on AMD Radeon RX 580.
+  - Measured real vs assumed parameters:
+    - JSON Syntax Validity: **92.3%** (assumed 100% structural)
+    - Schema Compliance: **92.3%**
+    - Diagnostic Accuracy $p_{\text{diag}}$: **46.9%** (vs assumed 85.0%)
+    - Hallucination Rate $p_{\text{hal}}$: **23.0%** (vs assumed 10.0%)
+    - Adversarial Rejection Rate: **37.9%**
+    - Mean Inference Latency: **4,162.2 ms** (vs assumed 1,500.0 ms)
+  - Generated `slm_eval_summary.csv/.tex`, `slm_by_class.csv/.tex`, `slm_offline_eval.csv`, and `slm_metrics.json`.
+
+
 

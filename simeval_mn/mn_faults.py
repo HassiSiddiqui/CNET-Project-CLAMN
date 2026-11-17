@@ -19,9 +19,15 @@ def _tc_rate(iface, rate_kbps):
                          "burst", "32kbit", "latency", "400ms"])
 
 
+def _get_rng(rng):
+    if rng is None or not hasattr(rng, "sample"):
+        return random.Random(42)
+    return rng
+
+
 def inject_link_failure(net, link_pair=None, mode="hard", rng=None):
     """S1: take a switch-switch link down (hard / degraded / flapping)."""
-    rng = rng or random.Random()
+    rng = _get_rng(rng)
     sw_links = [(u, v, d) for u, v, d in net.links
                 if hasattr(u, 'defaultIntf') and hasattr(v, 'defaultIntf')
                 and str(u).startswith("s") and str(v).startswith("s")]
@@ -42,7 +48,7 @@ def inject_link_failure(net, link_pair=None, mode="hard", rng=None):
 
 def inject_ddos(net, victim=None, intensity="medium", rng=None):
     """S2: start hping3 flood from random hosts to victim."""
-    rng = rng or random.Random()
+    rng = _get_rng(rng)
     hosts = net.hosts
     victim_h = net.get(victim) if victim else rng.choice(hosts)
     victim_ip = victim_h.IP()
@@ -61,7 +67,7 @@ def inject_ddos(net, victim=None, intensity="medium", rng=None):
 
 def inject_misconfig(net, switch=None, rng=None):
     """S3: install a drop rule on a mid-topology switch (simulate ACL misconfiguration)."""
-    rng = rng or random.Random()
+    rng = _get_rng(rng)
     switches = net.switches
     sw = net.get(switch) if switch else rng.choice(switches)
     # Install a low-priority drop rule (OpenFlow: match all -> drop)

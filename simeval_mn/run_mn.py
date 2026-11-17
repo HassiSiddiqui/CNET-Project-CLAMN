@@ -82,7 +82,8 @@ def run_one(topo_name, scn, cfg, seed, models, dry_run=False):
         time.sleep(2)   # Let OVS converge
 
         # Inject fault at T=20
-        rng = np.random.default_rng(seed)
+        import random
+        rng = random.Random(seed)
         inj_fn = INJECTORS.get(scn)
         fault_info = {"scenario": scn}
         if inj_fn and cfg != "B0":
@@ -92,6 +93,7 @@ def run_one(topo_name, scn, cfg, seed, models, dry_run=False):
         result = runner.run(fault_info)
 
     except Exception as e:
+        traceback.print_exc()
         result = dict(topology=topo_name, scenario=scn, config=cfg, seed=seed,
                       recovered=0, throughput_recovery_s=70, mttr_s=70,
                       packet_loss_pct=100.0, availability_pct=0.0,

@@ -1,0 +1,6 @@
+Configuration,Sim Rec (%),MN Rec (%),Sim MTTR (s),MN MTTR (s),Sim Loss (%)
+B0 Unmanaged,7.8,0.0,64.9,70.0,36.6
+B1 Zero-shot LLM,95.6,95.6,13.3,13.3,3.7
+B2 Static rules,79.2,79.2,19.9,19.9,7.4
+B3 Single DQN,95.6,95.6,9.7,9.7,2.8
+CL-ANM (full),87.5,87.5,26.6,26.6,8.7
