@@ -1,0 +1,15 @@
+[ppo graph=True] it 0 decisions 182 mean_r 0.742
+[ppo graph=True] it 5 decisions 146 mean_r 0.769
+[ppo graph=True] it 10 decisions 168 mean_r 0.748
+[ppo graph=True] it 15 decisions 133 mean_r 0.771
+[ppo graph=True] it 20 decisions 116 mean_r 0.737
+[ppo graph=True] it 25 decisions 145 mean_r 0.747
+[ppo graph=True] it 30 decisions 138 mean_r 0.764
+[ppo graph=True] it 35 decisions 129 mean_r 0.742
+[ppo graph=True] it 40 decisions 191 mean_r 0.779
+[ppo graph=True] it 45 decisions 124 mean_r 0.763
+[ppo graph=True] it 50 decisions 159 mean_r 0.749
+[ppo graph=True] it 55 decisions 153 mean_r 0.765
+[ppo graph=False] it 0 decisions 182 mean_r 0.742
+[ppo graph=False] it 5 decisions 146 mean_r 0.769
+[ppo graph=False] it 10 decisions 168 mean_r 0.748

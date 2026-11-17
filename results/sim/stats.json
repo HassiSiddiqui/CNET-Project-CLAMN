@@ -1,0 +1,100 @@
+{
+ "stats": {
+  "kruskal_mttr_pooled": {
+   "H": 1664.669562529718,
+   "p": 0.0
+  },
+  "kruskal_trt_pooled": {
+   "H": 1122.649090985187,
+   "p": 6.91182156242892e-235
+  },
+  "kruskal_mttr_S1_link_failure": {
+   "H": 216.28588701111065,
+   "p": 6.39895678778906e-41
+  },
+  "kruskal_mttr_S2_ddos": {
+   "H": 593.3903258717047,
+   "p": 4.590218241936861e-121
+  },
+  "kruskal_mttr_S3_misconfig": {
+   "H": 639.0083109843781,
+   "p": 7.660501710699867e-131
+  },
+  "kruskal_mttr_S4_cascading": {
+   "H": 452.8911465402887,
+   "p": 5.049942754820887e-91
+  },
+  "kruskal_mttr_S5_combined": {
+   "H": 414.2583243750892,
+   "p": 8.672191530413742e-83
+  }
+ },
+ "summary": {
+  "B0.recovered": 7.777777777777778,
+  "B0.mttr_s": 64.94444444444444,
+  "B0.throughput_recovery_s": 64.55555555555556,
+  "B0.packet_loss_pct": 36.627718947482045,
+  "B0.availability_pct": 64.05610670194004,
+  "B0.latency_p95_ms": 188.77169079044018,
+  "B1.recovered": 95.55555555555556,
+  "B1.mttr_s": 13.333333333333334,
+  "B1.throughput_recovery_s": 8.555555555555555,
+  "B1.packet_loss_pct": 3.682223911550903,
+  "B1.availability_pct": 96.54615850970018,
+  "B1.latency_p95_ms": 123.66316981544841,
+  "B2.recovered": 79.16666666666667,
+  "B2.mttr_s": 19.93611111111111,
+  "B2.throughput_recovery_s": 15.977777777777778,
+  "B2.packet_loss_pct": 7.373949264075676,
+  "B2.availability_pct": 93.95356591710758,
+  "B2.latency_p95_ms": 100.6899890181378,
+  "B3.recovered": 95.55555555555556,
+  "B3.mttr_s": 9.686111111111112,
+  "B3.throughput_recovery_s": 4.908333333333333,
+  "B3.packet_loss_pct": 2.8036953201020998,
+  "B3.availability_pct": 97.56966490299826,
+  "B3.latency_p95_ms": 112.93134328018748,
+  "FULL.recovered": 87.5,
+  "FULL.mttr_s": 26.613888888888887,
+  "FULL.throughput_recovery_s": 15.252777777777778,
+  "FULL.packet_loss_pct": 8.717342514790014,
+  "FULL.availability_pct": 92.08818342151676,
+  "FULL.latency_p95_ms": 162.37376530737782,
+  "A1.recovered": 84.16666666666667,
+  "A1.mttr_s": 27.705555555555556,
+  "A1.throughput_recovery_s": 16.816666666666666,
+  "A1.packet_loss_pct": 8.285221550114047,
+  "A1.availability_pct": 92.54596560846561,
+  "A1.latency_p95_ms": 155.07101849790993,
+  "A2.recovered": 87.5,
+  "A2.mttr_s": 24.855555555555554,
+  "A2.throughput_recovery_s": 12.627777777777778,
+  "A2.packet_loss_pct": 6.986231103228779,
+  "A2.availability_pct": 93.8398368606702,
+  "A2.latency_p95_ms": 138.1368908480992,
+  "A3.recovered": 86.66666666666667,
+  "A3.mttr_s": 27.352777777777778,
+  "A3.throughput_recovery_s": 16.56388888888889,
+  "A3.packet_loss_pct": 9.385693270958598,
+  "A3.availability_pct": 91.57228284832452,
+  "A3.latency_p95_ms": 159.64736872075355,
+  "A4.recovered": 88.05555555555556,
+  "A4.mttr_s": 19.372222222222224,
+  "A4.throughput_recovery_s": 14.969444444444445,
+  "A4.packet_loss_pct": 8.501142423966648,
+  "A4.availability_pct": 92.24878747795414,
+  "A4.latency_p95_ms": 161.31503671706247,
+  "A5.recovered": 87.5,
+  "A5.mttr_s": 26.875,
+  "A5.throughput_recovery_s": 15.802777777777777,
+  "A5.packet_loss_pct": 8.730152925879047,
+  "A5.availability_pct": 91.9662147266314,
+  "A5.latency_p95_ms": 158.2203659996375,
+  "A6.recovered": 88.05555555555556,
+  "A6.mttr_s": 26.3,
+  "A6.throughput_recovery_s": 14.741666666666667,
+  "A6.packet_loss_pct": 8.46508154159138,
+  "A6.availability_pct": 92.3145667989418,
+  "A6.latency_p95_ms": 162.08620121466876
+ }
+}
