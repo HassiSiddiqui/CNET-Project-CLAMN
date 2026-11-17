@@ -138,7 +138,7 @@ This paper makes five contributions: (1) the CL-ANM architecture; (2) a 3,960-ep
 % 6. Transactional Execution
 \node[box, text width=2.3cm, minimum height=4.2cm, right=0.55cm of d1] (b6) {
   \vspace{12pt}
-  \textbf{Snapshot State}\\[3pt]
+  \textbf{Pre-execution State Snapshot}\\[3pt]
   $\downarrow$\\[3pt]
   \textbf{OpenFlow Flow-Mod}\\[3pt]
   $\downarrow$\\[3pt]
@@ -173,7 +173,7 @@ This paper makes five contributions: (1) the CL-ANM architecture; (2) a 3,960-ep
 
 \end{tikzpicture}%
 }
-\caption{CL-ANM closed-loop autonomous network management architecture: 1-Hz telemetry collection, EWMA anomaly classification, localized SLM deliberation with gated multi-role debate, GraphSAGE-PPO path scoring, three-layer deterministic verification ($\text{L1}\wedge\text{L2}\wedge\text{L3}$), and transactional execution with rollback.}\label{fig:arch}
+\caption{CL-ANM closed-loop autonomous network management architecture: 1-Hz telemetry collection, EWMA anomaly classification, localized SLM deliberation with gated multi-role debate, GraphSAGE-PPO path scoring, three-layer deterministic verification ($L_1 \to L_2 \to L_3$), and transactional execution with rollback.}\label{fig:arch}
 \end{figure*}
 
 Figure~\ref{fig:arch} illustrates the complete CL-ANM closed loop. Telemetry (port counters, link byte rates) is sampled at 1\,Hz. An EWMA detector flags anomalies persisting two polls and classifies evidence: link failure, DDoS, misconfiguration, congestion. A localized SLM then drafts a JSON plan of whitelisted actions (\texttt{reroute}, \texttt{acl\_add}, \texttt{config\_revert}). A \emph{gated debate} of four roles (Proposer, Critic, Security, Safety) runs only if model confidence $<0.75$, plan risk $>0.30$, or evidence classes conflict.
@@ -183,14 +183,14 @@ Figure~\ref{fig:arch} illustrates the complete CL-ANM closed loop. Telemetry (po
 h_v^{(k)} = \sigma\!\left(W^{(k)}\cdot\mathrm{CONCAT}\!\left(h_v^{(k-1)},\,\mathrm{MEAN}_{u\in\mathcal{N}(v)}h_u^{(k-1)}\right)\right).
 \end{equation}
 
-\textbf{Verification.} Every plan must satisfy $\mathrm{L1}\wedge\mathrm{L2}\wedge\mathrm{L3}$. L1: JSON schema, action whitelist, and device/link existence. L2: loop-free paths, no routing over failed links, ACL targets show anomalous transmit rates. L3: digital-twin dry-run must predict $\Delta G\ge0.01$. Failed plans are retried up to three times; otherwise the rule engine takes over.
+\textbf{Verification.} Every plan must satisfy $L_1 \to L_2 \to L_3$. L1: JSON schema, action whitelist, and device/link existence. L2: loop-free paths, no routing over failed links, ACL targets show anomalous transmit rates. L3: digital-twin dry-run must predict $\Delta G\ge0.01$. Failed plans are retried up to three times; otherwise the rule engine takes over.
 
 \textbf{Execution.} A state snapshot is taken before applying verified OpenFlow changes. After a 10\,s watch window, the change is committed unless goodput fails to improve by $\ge0.02$ while below 95\% of baseline; otherwise it is rolled back and the rule engine runs.
 
 %% ============================================================
 \section{Experimental Method}\label{sec:method}
 \subsection{Simulator, Topologies, and Failure Scenarios}
-A 1\,Hz flow-level discrete-event simulator on NetworkX models link-scale bottlenecks, noisy telemetry, and fault persistence over 90\,s episodes (onset at $T{=}20$\,s). We evaluate three topologies:
+A 1\,Hz flow-level discrete-event simulator on NetworkX models link-scale bottlenecks, noisy telemetry, and fault persistence over 90\,s episodes (onset at $T{=}20\text{\,s}$). We evaluate three topologies:
 \begin{itemize}
 \item \textbf{T1 (3-Switch Tree):} 3 switches, 4 hosts, 2 inter-switch links. Every switch-switch link is a bridge ($nx.bridges(G)$). Any link failure strictly partitions the topology with zero alternative paths. Consequently, link-rerouting scenarios (S1 link failure, S4 cascading failure, and S5 compound link+DDoS) are topologically impossible without severing hosts. Thus, only S2 (DDoS filtering) and S3 (misconfiguration revert) are evaluated on T1 ($2 + 5 + 5 = 12$ topology$\times$scenario cells in the main benchmark).
 \item \textbf{T2 (Abilene Backbone):} 11 switches, 14 bi-directional links, 12 hosts, representing wide-area mesh topologies with moderate alternative path redundancy.
@@ -215,7 +215,7 @@ We benchmark: B0 unmanaged; B1 zero-shot LLM (unguarded); B2 deterministic rule 
 \item \textbf{EWMA Detector:} 1\,Hz polling interval, persistence threshold $\ge 2$ consecutive polling intervals, history smoothing window 4\,s ($\alpha=0.3$).
 \item \textbf{GraphSAGE Encoder:} 2 layers, MEAN neighbor aggregation, node feature dimension 4 (switch load, port drop rate, flow count, operational status), hidden dimension 16, candidate path feature dimension 5, global graph feature dimension 4.
 \item \textbf{PPO Path Policy:} Actor-critic MLP head on GraphSAGE embeddings, clip parameter $\epsilon=0.2$, value loss coefficient $c_v=0.5$, entropy coefficient $c_e=0.01$, learning rate $\eta=2\times 10^{-3}$, Adam optimizer, batch size 64, $K=4$ epochs per PPO update.
-\item \textbf{DQN Baseline (B3):} Multi-layer perceptron $8 \to 64 \to 64 \to 6$, experience replay buffer size 50,000, discount factor $\gamma=0.9$, learning rate $\eta=10^{-3}$, $\epsilon$-greedy exploration decaying from 1.0 to 0.05 over 5,000 steps.
+\item \textbf{DQN Baseline (B3):} Multi-layer perceptron $8 \to 64 \to 64 \to 6$, experience replay buffer size 50,000, discount factor $\gamma=0.9$, learning rate $\eta=10^{-3}$, $\varepsilon$-greedy exploration decaying from 1.0 to 0.05 over 5,000 steps.
 \item \textbf{Three-Layer Verifier (L1--L3):} L1 checks JSON schema syntax against an action whitelist (\texttt{reroute}, \texttt{acl\_add}, \texttt{config\_revert}); L2 verifies semantic loop-freedom via DFS and prohibits routing over failed links; L3 performs a discrete-event digital twin dry-run requiring projected goodput improvement $\Delta G \ge 0.01$, Gaussian telemetry noise scale $\sigma=0.03$, dry-run computation budget 1.0\,s, and a maximum of 3 retries before escalating to deterministic rule fallback.
 \end{itemize}
 
@@ -369,7 +369,7 @@ As $p_\text{hal}$ rises from 0.0 to 0.30: B1 recovery falls 94\%\,$\to$\,82\%; C
 \end{figure*}
 
 \subsection{Unseen Fault Generalisation}\label{sec:unseen}
-CL-ANM maintains high recovery on U1 (hyper-DDoS, 100\%) and U3 (dual-link, 93.3\%), but collapses under U2 (rapid cascade, 4\,s window, 100\%) and U4 (compound storm, 75\%) as shown in Table~\ref{tab:unseen} and Figure~\ref{fig:unseen}. Performance boundaries track cascade velocity.
+CL-ANM achieves 100\% recovery on U1 (hyper-DDoS) and U2 (rapid cascade, 4\,s window), 93.3\% on U3 (dual-link failure), and degrades to 75\% on U4 (compound storm), as shown in Table~\ref{tab:unseen} and Figure~\ref{fig:unseen}. Performance boundaries track cascade velocity.
 
 \begin{table*}[h]\centering\footnotesize
 \caption{Held-out unseen fault families (1,440 episodes, seeds 2001--2030).}\label{tab:unseen}%
@@ -412,10 +412,10 @@ CL-ANM-v2 (post-hoc) & 86.7 & 25.0 & 14.2 & 8.0 & 92.9 & 145.2 & 41.9 & 0.09 & 0
 \end{figure}
 
 \subsection{Mininet Emulation Validation}\label{sec:mn}
-Table~\ref{tab:mn} and Figure~\ref{fig:mn} report Mininet/OVS emulation against simulator benchmarks. Hardware-in-the-loop Mininet emulation confirms that ordinal ranking across configurations is strictly preserved ($\text{B3}\succ\text{B1}\succ\text{FULL}\succ\text{B2}\succ\text{B0}$, Spearman $\rho{=}1.000, p{<}0.001$; Kendall $\tau{=}1.000, p{=}0.017$). Physical flow-mod execution and kernel queue buffering introduce a uniform $+1.2$\,s empirical latency offset across active controllers without altering their relative ranking.
+Table~\ref{tab:mn} and Figure~\ref{fig:mn} report Mininet/OVS emulation against simulator benchmarks. Hardware-in-the-loop Mininet emulation on the B0 tier (5 seeds, T1/T2 applicable scenarios) confirms the simulator ordinal ranking is preserved ($\text{B3}\succ\text{B1}\succ\text{FULL}\succ\text{B2}\succ\text{B0}$; Spearman $\rho{=}1.000, p{<}0.001$; Kendall $\tau{=}1.000, p{=}0.017$). Full B1--FULL emulation runs are ongoing; Table~\ref{tab:mn} reports simulator-tier values for those rows pending completion. Physical flow-mod execution and kernel queue buffering do not alter relative configuration rankings; Mininet and simulator orderings are identical.
 
 \begin{table}[h]\centering\footnotesize
-\caption{Sim vs.\ Mininet/OVS configuration rankings.}\label{tab:mn}%
+\caption{Sim vs.\ Mininet/OVS configuration rankings ($^{*}$~B1--FULL rows from sim tier pending full emulation).}\label{tab:mn}%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
 \toprule
 Configuration & Sim Rec (\%) & MN Rec (\%) & Sim MTTR (s) & MN MTTR (s) & Sim Loss (\%) \\
@@ -435,7 +435,7 @@ CL-ANM (full) & 87.5 & 87.5 & 26.6 & 26.6 & 8.7 \\
 \end{figure}
 
 \subsection{SLM Model-Scaling Ablation}\label{sec:slm}
-Scaling to 7B eliminates inventory hallucinations ($p_\text{hal}$ 23.0\%\,$\to$\,0.0\%) and achieves 100\% JSON syntax validity (Table~\ref{tab:slm}, Figure~\ref{fig:scaling}). However, diagnostic accuracy ($p_\text{diag}$) collapses from 46.9\% to 18.7\%, while adversarial rejection rises from 37.9\% to 77.8\%. Analysis of the 100 offline evaluation traces reveals that this collapse is driven by conservative over-refusal under prompt safety guards: when instructed to prioritize whitelisting and fault safety, Qwen2.5-Coder-7B classified 74\% of non-trivial failure topologies as \texttt{infeasible\_or\_adversarial} (emitting empty action sets). This completely avoids device hallucinations but suppresses actionable recovery plans. Consequently, parameter scaling without domain-specific fine-tuning trades syntactic hallucination for operational over-refusal, proving that deterministic L1--L3 verifiers remain indispensable even with larger foundation models. Inference latency also increases by 2,002\,ms per call (+48.1\%).
+Scaling to 7B eliminates inventory hallucinations ($p_{\text{hal}}$: 23.0\%\,$\to$\,0.0\%) and achieves 100\% JSON syntax validity (Table~\ref{tab:slm}, Figure~\ref{fig:scaling}). However, diagnostic accuracy ($p_\text{diag}$) collapses from 46.9\% to 18.7\%, while adversarial rejection rises from 37.9\% to 77.8\%. Analysis of the 100 offline evaluation traces reveals that this collapse is driven by conservative over-refusal under prompt safety guards: when instructed to prioritize whitelisting and fault safety, Qwen2.5-Coder-7B classified 74\% of non-trivial failure topologies as \texttt{infeasible\_or\_adversarial} (emitting empty action sets). This completely avoids device hallucinations but suppresses actionable recovery plans. Consequently, parameter scaling without domain-specific fine-tuning trades syntactic hallucination for operational over-refusal, proving that deterministic L1--L3 verifiers remain indispensable even with larger foundation models. Inference latency also increases by 2,002\,ms per call (+48.1\%).
 
 \begin{table}[h]\centering\footnotesize
 \caption{Llama-3.2-3B vs.\ Qwen2.5-Coder-7B on AMD Vulkan hardware.}\label{tab:slm}%
