@@ -1,0 +1,8 @@
+Evaluation Metric,Llama-3.2-3B-Instruct (Ablation),Qwen2.5-Coder-7B-Instruct (Proposed),Relative Gain / Impact
+Parameter Scale,"3.2 Billion (Q4_K_M, 2.0GB)","7.6 Billion (Q4_K_M, 4.7GB)",+138% Parameters
+JSON Syntax Validity (\%),92.3,100.0,+7.7\%
+Schema Compliance (\%),92.3,98.0,+5.7\%
+Diagnostic Accuracy $p_{\text{diag}}$ (\%),46.9,18.7,-28.2\%
+Hallucination Rate $p_{\text{hal}}$ (\%),23.0,0.0,-23.0\%
+Adversarial Rejection Rate (\%),37.9,77.8,+39.8\%
+Mean Inference Latency (ms),4162.2,6164.0,+2001.8 ms

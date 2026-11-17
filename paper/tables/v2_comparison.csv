@@ -1,0 +1,3 @@
+Configuration,Recovered (%),MTTR (s),TRT (s),Loss (%),Avail. (%),p95 Lat (ms),Fallbacks (%),Rollbacks/ep,Invalid Exec (%)
+CL-ANM (FULL),87.5,26.6,15.3,8.7,92.1,162.4,44.2,0.07,0.1
+CL-ANM-v2 (post-hoc),86.7,25.0,14.2,8.0,92.9,145.2,41.9,0.09,0.2

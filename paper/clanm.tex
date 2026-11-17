@@ -56,7 +56,13 @@ This paper makes five contributions: (1) the CL-ANM architecture; (2) a 3,960-ep
 
 %% ============================================================
 \section{CL-ANM Design}\label{sec:design}
-Telemetry (port counters, link byte rates) is sampled at 1\,Hz. An EWMA detector flags anomalies persisting two polls and classifies evidence: link failure, DDoS, misconfiguration, congestion. A SLM then drafts a JSON plan of whitelisted actions (\texttt{reroute}, \texttt{acl\_add}, \texttt{config\_revert}). A \emph{gated debate} of four roles (Proposer, Critic, Security, Safety) runs only if model confidence $<0.75$, plan risk $>0.30$, or evidence classes conflict.
+
+\begin{figure*}[!t]\centering
+\includegraphics[width=\textwidth]{fig_architecture.png}
+\caption{CL-ANM closed-loop autonomous network management architecture: 1-Hz telemetry collection, EWMA anomaly classification, localized SLM deliberation with gated multi-role debate, GraphSAGE-PPO path scoring, three-layer deterministic verification ($\text{L1}\wedge\text{L2}\wedge\text{L3}$), and transactional execution with rollback.}\label{fig:arch}
+\end{figure*}
+
+Figure~\ref{fig:arch} illustrates the complete CL-ANM closed loop. Telemetry (port counters, link byte rates) is sampled at 1\,Hz. An EWMA detector flags anomalies persisting two polls and classifies evidence: link failure, DDoS, misconfiguration, congestion. A localized SLM then drafts a JSON plan of whitelisted actions (\texttt{reroute}, \texttt{acl\_add}, \texttt{config\_revert}). A \emph{gated debate} of four roles (Proposer, Critic, Security, Safety) runs only if model confidence $<0.75$, plan risk $>0.30$, or evidence classes conflict.
 
 \textbf{PPO path selection.} For \texttt{reroute}, up to $K{=}4$ candidate paths per flow are scored by a PPO policy~\cite{ppo} using a 2-layer GraphSAGE encoder~\cite{graphsage}:
 $h_v^{(k)} = \sigma\!\left(W^{(k)}\cdot\mathrm{CONCAT}\!\left(h_v^{(k-1)},\,\mathrm{MEAN}_{u\in\mathcal{N}(v)}h_u^{(k-1)}\right)\right).$
@@ -348,12 +354,14 @@ CL-ANM integrates SLM diagnosis, multi-role debate, GraphSAGE-PPO path selection
 
 \FloatBarrier
 %% ============================================================
+\clearpage
 \appendix
 \onecolumn
 \section{Per-Cell Breakdown Tables}
+\vspace{-2pt}
 
-\begin{table*}[t]\centering\scriptsize
-\caption{Per-cell recovery rate (\%) across all 12 topology$\times$scenario cells (30 seeds each).}\label{tab:percell_rec}
+{\centering\small
+\captionof{table}{Per-cell recovery rate (\%) across all 12 topology$\times$scenario cells (30 seeds each).}\label{tab:percell_rec}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrrrrrrrr}
 \toprule
 Topology & Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
@@ -374,12 +382,12 @@ T3 Fat-tree & S4 Cascading & 0.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0
 T3 Fat-tree & S5 Compound & 0.0 & 83.3 & 100.0 & 96.7 & 40.0 & 23.3 & 56.7 & 30.0 & 40.0 & 36.7 & 46.7 \\
 \bottomrule
 \end{tabular*}
-\end{table*}
+\par}
 
-\vspace{10pt}
+\vspace{16pt}
 
-\begin{table*}[t]\centering\scriptsize
-\caption{Per-cell MTTR (s, censored at 70\,s) across all 12 topology$\times$scenario cells.}\label{tab:percell_mttr}
+{\centering\small
+\captionof{table}{Per-cell MTTR (s, censored at 70\,s) across all 12 topology$\times$scenario cells.}\label{tab:percell_mttr}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrrrrrrrr}
 \toprule
 Topology & Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
@@ -400,6 +408,6 @@ T3 Fat-tree & S4 Cascading & 70.0 & 12.8 & 6.0 & 6.0 & 19.2 & 25.7 & 14.4 & 21.9
 T3 Fat-tree & S5 Compound & 70.0 & 25.4 & 9.3 & 11.7 & 53.4 & 63.1 & 44.4 & 59.0 & 48.0 & 51.9 & 49.7 \\
 \bottomrule
 \end{tabular*}
-\end{table*}
+\par}
 
 \end{document}

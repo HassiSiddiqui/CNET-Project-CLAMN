@@ -1,0 +1,17 @@
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Configuration & LLM calls & Tokens & Ctl ms/ep & Invalid gen. (\%) & Invalid exec. (\%) & Rejected & Rollbacks & Fallback (\%) \\
+\midrule
+B0 Unmanaged & 0.0 & 0 & 0 & -- & -- & 0.00 & 0.00 & 0 \\
+B1 Zero-shot LLM & 8.5 & 2532 & 7 & 8.4 & 8.3 & 0.00 & 0.00 & 0 \\
+B2 Static rules & 0.0 & 0 & 11 & -- & -- & 0.00 & 0.00 & 0 \\
+B3 Single DQN & 0.0 & 0 & 11 & -- & -- & 0.00 & 0.00 & 0 \\
+CL-ANM (full) & 14.9 & 4430 & 21 & 9.6 & 0.1 & 1.95 & 0.07 & 44 \\
+A1 w/o verification & 16.4 & 4932 & 15 & 7.4 & 6.3 & 0.00 & 0.16 & 16 \\
+A2 w/o debate & 3.5 & 1049 & 15 & 8.2 & 0.5 & 1.96 & 0.11 & 49 \\
+A3 w/o RL & 15.3 & 4576 & 17 & 10.1 & 0.1 & 2.00 & 0.06 & 40 \\
+A4 w/o rollback & 16.3 & 4896 & 23 & 9.4 & 0.2 & 2.22 & 0.00 & 42 \\
+A5 w/o graph enc. & 15.7 & 4722 & 21 & 11.0 & 0.3 & 2.06 & 0.04 & 40 \\
+A6 debate always-on & 19.0 & 5641 & 19 & 7.1 & 0.1 & 1.58 & 0.08 & 41 \\
+\bottomrule
+\end{tabular}

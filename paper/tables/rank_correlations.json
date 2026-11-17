@@ -1,0 +1,10 @@
+{
+  "mttr_spearman_rho": 0.9999999999999999,
+  "mttr_spearman_p": 1.4042654220543672e-24,
+  "mttr_kendall_tau": 0.9999999999999999,
+  "mttr_kendall_p": 0.016666666666666666,
+  "recovery_spearman_rho": 1.0,
+  "recovery_spearman_p": 0.0,
+  "recovery_kendall_tau": 1.0,
+  "recovery_kendall_p": 0.019176729141549043
+}
