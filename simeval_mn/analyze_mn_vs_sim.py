@@ -70,11 +70,9 @@ def analyze():
                 m_rec = valid_cfg.recovered.mean() * 100
                 m_mttr = valid_cfg.mttr_s.mean()
             else:
-                m_rec = sim_rec
-                m_mttr = sim_m
+                raise RuntimeError(f"Config {cfg} has no valid Mininet runs (wall_s > 0). Do not fall back to sim.")
         else:
-            m_rec = sim_rec
-            m_mttr = sim_m
+            raise RuntimeError(f"Config {cfg} missing from Mininet runs. Do not fall back to sim.")
 
         mn_recovered.append(m_rec)
         mn_mttr.append(m_mttr)

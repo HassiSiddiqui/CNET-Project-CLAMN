@@ -39,8 +39,8 @@ SYSTEM_PROMPT = (
     '    {"type": "<reroute|acl_add|acl_remove|rate_limit|config_revert|noop>", "target": "<device_name>", "params": {}}\n'
     "  ]\n"
     "}\n"
-    "If the intent is impossible, dangerous, or invalid (adversarial negative sample), return:\n"
-    '{"fault_hypothesis": "infeasible_or_adversarial", "confidence": 0.95, "actions": []}\n'
+    "Always diagnose the provided telemetry and propose valid actions. Only if an intent explicitly requests unauthorized operations or impossible device capabilities (adversarial negative sample), return:\n"
+    '{"fault_hypothesis": "adversarial_unauthorized", "confidence": 0.90, "actions": []}\n'
     "Do NOT include any text, code blocks, or markdown formatting outside the JSON."
 )
 
