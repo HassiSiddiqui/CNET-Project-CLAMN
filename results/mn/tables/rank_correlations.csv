@@ -1,3 +1,3 @@
 Metric,Spearman Rho,Kendall Tau
-MTTR Ranking Correlation,1.000 (p=0.000),1.000 (p=0.017)
-Recovery Rate Ranking Correlation,1.000 (p=0.000),1.000 (p=0.019)
+MTTR Ranking Correlation,0.300 (p=0.624),0.200 (p=0.817)
+Recovery Rate Ranking Correlation,0.658 (p=0.227),0.444 (p=0.298)

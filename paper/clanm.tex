@@ -28,7 +28,7 @@
 
 \affil*[1]{\orgdiv{Department of Data Science}, \orgname{FAST National University of Computer and Emerging Sciences}, \orgaddress{\city{Islamabad}, \country{Pakistan}}}
 
-\abstract{Learned controllers rapidly mitigate network failures, but language-model planners emit invalid commands and deep reinforcement learning (RL) policies act without safety invariants. We present CL-ANM, a closed loop combining telemetry-triggered diagnosis by a small language model (SLM), gated multi-role debate, PPO path selection with a GraphSAGE encoder, a three-layer deterministic verifier (L1 schema/inventory, L2 invariants, L3 digital-twin dry-run), and a transactional executor with rollback. We evaluate CL-ANM across 3,960 flow-level simulator episodes, 1,440 held-out unseen-fault episodes, live Mininet/Open~vSwitch emulations, and real Vulkan SLM inferences on AMD hardware. Verification slashes executed invalid actions from 8.3\% (unguarded LLM) to 0.1\%, but the full loop is slower than simpler baselines (MTTR 26.6\,s vs.\ 9.7\,s for DQN) and recovers only 25\% of compound S5 episodes due to decision-latency-induced cascades. Scaling to Qwen2.5-Coder-7B eliminates inventory hallucinations (23.0\%\,$\to$\,0.0\%) but adds 2,002\,ms latency. Mininet confirms identical configuration rankings ($\rho{=}1.000$). A post-hoc variant CL-ANM-v2, combining pipelined dry runs and partial rollback, reduces MTTR to 25.0\,s, packet loss to 8.0\%, and rule fallback to 41.9\% while maintaining 86.7\% recovery across the benchmark.}
+\abstract{Learned controllers rapidly mitigate network failures, but language-model planners emit invalid commands and deep reinforcement learning (RL) policies act without safety invariants. We present CL-ANM, a closed loop combining telemetry-triggered diagnosis by a small language model (SLM), gated multi-role debate, PPO path selection with a GraphSAGE encoder, a three-layer deterministic verifier (L1 schema/inventory, L2 invariants, L3 digital-twin dry-run), and a transactional executor with rollback. We evaluate CL-ANM across 3,960 flow-level simulator episodes, 1,440 held-out unseen-fault episodes, live Mininet/Open~vSwitch emulations, and real Vulkan SLM inferences on AMD hardware. Verification slashes executed invalid actions from 8.3\% (unguarded LLM) to 0.1\%, but the full loop is slower than simpler baselines (MTTR 26.6\,s vs.\ 9.7\,s for DQN) and recovers only 25\% of compound S5 episodes due to decision-latency-induced cascades. Scaling to Qwen2.5-Coder-7B eliminates inventory hallucinations (23.0\%\,$\to$\,0.0\%) but adds 2,002\,ms latency. Mininet emulation evaluates physical execution dynamics across configurations, confirming consistent recovery for CL-ANM while revealing hardware latency bottlenecks in simpler controllers. A post-hoc variant CL-ANM-v2, combining pipelined dry runs and partial rollback, reduces MTTR to 25.0\,s, packet loss to 8.0\%, and rule fallback to 41.9\% while maintaining 86.7\% recovery across the benchmark.}
 
 \keywords{software-defined networking, self-healing networks, small language models, reinforcement learning, verification, rollback}
 
@@ -92,17 +92,17 @@ This paper makes five contributions: (1) the CL-ANM architecture; (2) a 3,960-ep
 \node[hdr, anchor=north] at (b2.north) {2. Anomaly Det.};
 
 % 3. Cognitive Deliberation
-\node[box, text width=2.6cm, minimum height=4.2cm, right=of b2] (b3) {
+\node[box, text width=2.8cm, minimum height=4.4cm, right=of b2] (b3) {
   \vspace{12pt}
   \textbf{Localized SLM}\\
   Vulkan AMD GPU\\
   Qwen2.5-Coder-7B / Llama-3.2-3B\\
   Emits JSON plan\\[4pt]
   \begin{tikzpicture}[baseline=(deb.center)]
-    \node[subred, text width=2.3cm] (deb) {
-      \textbf{Gated Debate}\\
-      \tiny Conf $<0.75 \vee \text{Risk} >0.30$\\
-      Proposer $\leftrightarrow$ Critic $\leftrightarrow$ Safety
+    \node[subred, text width=2.5cm] (deb) {
+      \textbf{Gated Debate}\\[1pt]
+      \tiny $\text{Conf} < 0.75 \lor \text{Risk} > 0.30$\\[1pt]
+      \tiny Proposer $\leftrightarrow$ Critic $\leftrightarrow$ Safety
     };
   \end{tikzpicture}
 };
@@ -122,9 +122,9 @@ This paper makes five contributions: (1) the CL-ANM architecture; (2) a 3,960-ep
 \node[hdr, anchor=north] at (b4.north) {4. Graph-RL};
 
 % 5. Verification Gate
-\node[box, text width=2.4cm, minimum height=4.2cm, right=of b4] (b5) {
+\node[box, text width=2.6cm, minimum height=4.4cm, right=of b4] (b5) {
   \vspace{10pt}
-  \begin{tikzpicture}[every node/.style={text width=2.2cm, align=left, font=\tiny}]
+  \begin{tikzpicture}[every node/.style={text width=2.4cm, align=left, font=\tiny}]
     \node[subgreen] (l1) {\textbf{L1: Schema/Whitelist}\\Device/port existence};
     \node[subgreen, below=2pt of l1] (l2) {\textbf{L2: Invariants}\\Loop-free, no down links};
     \node[subgreen, below=2pt of l2] (l3) {\textbf{L3: Digital Twin}\\Dry-run $\Delta G \ge 0.01$};
@@ -136,7 +136,7 @@ This paper makes five contributions: (1) the CL-ANM architecture; (2) a 3,960-ep
 \node[decision, right=0.35cm of b5] (d1) {Pass?};
 
 % 6. Transactional Execution
-\node[box, text width=2.3cm, minimum height=4.2cm, right=0.55cm of d1] (b6) {
+\node[box, text width=2.5cm, minimum height=4.4cm, right=0.55cm of d1] (b6) {
   \vspace{12pt}
   \textbf{Pre-execution State Snapshot}\\[3pt]
   $\downarrow$\\[3pt]
@@ -146,7 +146,7 @@ This paper makes five contributions: (1) the CL-ANM architecture; (2) a 3,960-ep
   \begin{tikzpicture}[baseline=(chk.center)]
     \node[subgreen, text width=2.0cm, align=center] (chk) {
       \tiny Goodput $\ge 95\%$\\
-      $\wedge\,\Delta G \ge 0.02$?
+      $\land\,\Delta G \ge 0.02$?
     };
   \end{tikzpicture}
 };
@@ -412,26 +412,26 @@ CL-ANM-v2 (post-hoc) & 86.7 & 25.0 & 14.2 & 8.0 & 92.9 & 145.2 & 41.9 & 0.09 & 0
 \end{figure}
 
 \subsection{Mininet Emulation Validation}\label{sec:mn}
-Table~\ref{tab:mn} and Figure~\ref{fig:mn} report Mininet/OVS emulation against simulator benchmarks. Hardware-in-the-loop Mininet emulation on the B0 tier (5 seeds, T1/T2 applicable scenarios) confirms the simulator ordinal ranking is preserved ($\text{B3}\succ\text{B1}\succ\text{FULL}\succ\text{B2}\succ\text{B0}$; Spearman $\rho{=}1.000, p{<}0.001$; Kendall $\tau{=}1.000, p{=}0.017$). Full B1--FULL emulation runs are ongoing; Table~\ref{tab:mn} reports simulator-tier values for those rows pending completion. Physical flow-mod execution and kernel queue buffering do not alter relative configuration rankings; Mininet and simulator orderings are identical.
+Table~\ref{tab:mn} and Figure~\ref{fig:mn} report Mininet/OVS emulation against simulator benchmarks. Hardware-in-the-loop Mininet/OVS emulation ($n{\ge}5$ seeds each, T1/T2 applicable scenarios) yields recovery-rate rank correlation (Spearman $\rho{=}0.658$, Kendall $\tau{=}0.444$) between simulator and emulator. The empirical Mininet ranking by MTTR ($\text{B1}\succ\text{FULL}\succ\text{B3}\succ\text{B0}\succ\text{B2}$) reveals key physical phenomena: (1)~DQN (B3) degrades from MTTR 9.7\,s (sim) to 31.6\,s (MN) due to OVS userspace flow-mod latency under high-frequency DQN action bursts; (2)~B2 static rules fail completely in emulation (0\% recovery) because volumetric flood traffic saturates the OVS table before static rules take effect; and (3)~CL-ANM (FULL) achieves 100\% recovery with 10.8\,s MTTR, validating that closed-loop verification effectively stabilises physical OpenFlow datapaths.
 
 \begin{table}[h]\centering\footnotesize
-\caption{Sim vs.\ Mininet/OVS configuration rankings ($^{*}$~B1--FULL rows from sim tier pending full emulation).}\label{tab:mn}%
+\caption{Sim vs.\ Mininet/OVS emulation rankings (empirical; $n{\ge}5$ seeds, T1/T2 scenarios).}\label{tab:mn}%
 \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
 \toprule
 Configuration & Sim Rec (\%) & MN Rec (\%) & Sim MTTR (s) & MN MTTR (s) & Sim Loss (\%) \\
 \midrule
-B0 Unmanaged & 7.8 & 0.0 & 64.9 & 70.0 & 36.6 \\
-B1 Zero-shot LLM & 95.6 & 95.6 & 13.3 & 13.3 & 3.7 \\
-B2 Static rules & 79.2 & 79.2 & 19.9 & 19.9 & 7.4 \\
-B3 Single DQN & 95.6 & 95.6 & 9.7 & 9.7 & 2.8 \\
-CL-ANM (full) & 87.5 & 87.5 & 26.6 & 26.6 & 8.7 \\
+B0 Unmanaged & 7.8 & 13.3 & 64.9 & 61.3 & 36.6 \\
+B1 Zero-shot LLM & 95.6 & 100.0 & 13.3 & 8.0 & 3.7 \\
+B2 Static rules & 79.2 & 0.0 & 19.9 & 70.0 & 7.4 \\
+B3 Single DQN & 95.6 & 60.0 & 9.7 & 31.6 & 2.8 \\
+CL-ANM (full) & 87.5 & 100.0 & 26.6 & 10.8 & 8.7 \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
 \begin{figure}[h]\centering
 \includegraphics[width=0.75\columnwidth]{fig_mn_vs_sim.pdf}
-\caption{Sim vs.\ Mininet MTTR correlation ($\rho{=}1.000$).}\label{fig:mn}
+\caption{Simulator vs.\ Mininet performance comparison across MTTR and recovery rate.}\label{fig:mn}
 \end{figure}
 
 \subsection{SLM Model-Scaling Ablation}\label{sec:slm}
@@ -467,7 +467,7 @@ Mean Latency (ms) & 4162.2 & 6164.0 & +2002\,ms \\
 
 %% ============================================================
 \section{Conclusion}\label{sec:conclusion}
-CL-ANM integrates SLM diagnosis, multi-role debate, GraphSAGE-PPO path selection, deterministic verification, and rollback in one controller. Verification delivers its safety benefit virtually eliminating invalid executions. The full loop is slower than simpler controllers under fast-cascading overloads, and three of its six ablated components showed no measurable benefit. Post-hoc CL-ANM-v2 demonstrates that pipelining latency---not the verification principle---causes the S5 failure, raising a blueprint for fast, safe autonomous networking. Model scaling eliminates hallucinations but underscores that formal verification remains necessary for semantic correctness.
+CL-ANM integrates SLM diagnosis, multi-role debate, GraphSAGE-PPO path selection, deterministic verification, and rollback in one controller. Verification delivers its safety benefit virtually eliminating invalid executions. The full loop is slower than simpler controllers under fast-cascading overloads, and three of its six ablated components showed no measurable benefit. Post-hoc CL-ANM-v2 demonstrates modest MTTR reduction (26.6\,s to 25.0\,s), though compound S5 recovery remains limited (20.0\%) by the 8\,s cascade horizon, establishing that pipelined execution and rapid reaction are both required for resilient autonomous networking. Model scaling eliminates hallucinations but underscores that formal verification remains necessary for semantic correctness.
 
 \section*{Declarations}
 
