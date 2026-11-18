@@ -1,10 +1,10 @@
 {
-  "mttr_spearman_rho": 0.3,
-  "mttr_spearman_p": 0.6238376647810728,
-  "mttr_kendall_tau": 0.19999999999999998,
-  "mttr_kendall_p": 0.8166666666666667,
-  "recovery_spearman_rho": 0.6578947368421054,
-  "recovery_spearman_p": 0.2274702165738091,
-  "recovery_kendall_tau": 0.4444444444444444,
-  "recovery_kendall_p": 0.2979111183734344
+  "mttr_spearman_rho": 0.49999999999999994,
+  "mttr_spearman_p": 0.39100221895577053,
+  "mttr_kendall_tau": 0.39999999999999997,
+  "mttr_kendall_p": 0.48333333333333334,
+  "recovery_spearman_rho": 0.7631578947368421,
+  "recovery_spearman_p": 0.1333391195318063,
+  "recovery_kendall_tau": 0.6666666666666666,
+  "recovery_kendall_p": 0.1184329289166719
 }
