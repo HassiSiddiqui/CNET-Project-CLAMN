@@ -12,6 +12,8 @@
 \usepackage{booktabs}%
 \usepackage{tabularx}%
 \usepackage{url}%
+\usepackage{adjustbox}%
+\usepackage{placeins}%
 \usepackage{tikz}%
 \usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,calc,backgrounds}%
 
@@ -21,65 +23,143 @@
 
 \begin{document}
 
-\title[Closed-Loop Autonomous Network Management with SLM, Verifier, and RL]{Closed-Loop Autonomous Network Management with Language-Model Diagnosis, Verified Execution, and Graph Reinforcement Learning: A Simulation and Emulation Study}
+\title[Closed-Loop Autonomous Network Management with LM, Verifier, and RL]{Closed-Loop Autonomous Network Management with Language-Model Diagnosis, Verified Execution, and Graph Reinforcement Learning: A Simulation and Emulation Study}
 
 \author*[1]{\fnm{Abdul Haseeb} \sur{Siddiqui}}\email{i232654@isb.nu.edu.pk}
 \author[1]{\fnm{Issa} \sur{Sultan}}\email{i232596@isb.nu.edu.pk}
 
 \affil*[1]{\orgdiv{Department of Data Science}, \orgname{FAST National University of Computer and Emerging Sciences}, \orgaddress{\city{Islamabad}, \country{Pakistan}}}
 
-\abstract{Learned controllers rapidly mitigate network failures, but language-model planners emit invalid commands and deep reinforcement learning (RL) policies act without safety invariants. We present CL-ANM, a closed loop combining telemetry-triggered diagnosis by a small language model (SLM), gated multi-role debate, PPO path selection with a GraphSAGE encoder, a three-layer deterministic verifier (L1 schema/inventory, L2 invariants, L3 digital-twin dry-run), and a transactional executor with rollback. We evaluate CL-ANM across 3,960 flow-level simulator episodes, 1,440 held-out unseen-fault episodes, live Mininet/Open~vSwitch emulations, and real Vulkan SLM inferences on AMD hardware. Verification slashes executed invalid actions from 8.3\% (unguarded LLM) to 0.1\%, but the full loop is slower than simpler baselines (MTTR 26.6\,s vs.\ 9.7\,s for DQN) and recovers only 25\% of compound S5 episodes due to decision-latency-induced cascades. Scaling to Qwen2.5-Coder-7B eliminates inventory hallucinations (23.0\%\,$\to$\,0.0\%) but adds 2,002\,ms latency. Mininet emulation evaluates physical execution dynamics across configurations, confirming consistent recovery for CL-ANM while revealing hardware latency bottlenecks in simpler controllers. A post-hoc variant CL-ANM-v2, combining pipelined dry runs and partial rollback, reduces MTTR to 25.0\,s, packet loss to 8.0\%, and rule fallback to 41.9\% while maintaining 86.7\% recovery across the benchmark.}
+\abstract{Learned controllers can mitigate network failures quickly, but language-model (LM) planners can emit invalid commands and reinforcement learning (RL) policies operate without formal safety invariants. We present CL-ANM, a closed loop combining telemetry-triggered diagnosis by a localised LM, gated multi-role debate, PPO path selection with a GraphSAGE encoder, a three-layer deterministic verifier ($L_1 \to L_2 \to L_3$), and a transactional executor with rollback. We evaluate CL-ANM across 3,960 flow-level simulation episodes, held-out unseen faults, and Mininet emulation. Verification reduces executed invalid actions from 8.3\% to 0.1\%, though the full loop has a higher mean time to recovery than unverified DQN (26.6\,s versus 9.7\,s). In emulation, CL-ANM maintains recovery while simpler controllers degrade under hardware timing constraints. A post-hoc variant with pipelined dry runs reduces recovery time while preserving verification safety.}
 
-\keywords{software-defined networking, self-healing networks, small language models, reinforcement learning, verification, rollback}
+\keywords{software-defined networking, self-healing networks, language models, reinforcement learning, verification, rollback}
 
 \maketitle
 
 %% ============================================================
+\FloatBarrier
 \section{Introduction}\label{sec:intro}
-Network outages are caused by physical faults, volumetric attacks, and misconfiguration. Language-model systems translate intents into configurations~\cite{adanza,phone,lira,llnet,netintent,aicom} but generate hallucinated device references~\cite{lira}. RL controllers learn fast reactions~\cite{makiyah,qosentry,omarf,dqn,ppo} but act without formal safety checks. Agentic frameworks add runtime shielding~\cite{gym6g,safe5g,ragma} but rely on stochastic validators. No prior study unifies a localised language model, a graph-RL path policy, three-layer deterministic verification, and transactional rollback in one loop while measuring each component's cost.
+Network outages stem from physical faults, volumetric traffic attacks, and routing misconfigurations. Language-model systems translate human operator intents into network configurations~\cite{adanza,phone,lira,llnet,netintent,aicom}, but they occasionally generate hallucinated device identifiers or invalid syntax~\cite{lira}. Reinforcement learning (RL) controllers learn fast reactions~\cite{makiyah,qosentry,omarf,dqn,ppo}, but they act without formal safety guarantees. Agentic frameworks introduce runtime shields~\cite{gym6g,safe5g,ragma}, yet they often rely on stochastic validators rather than deterministic checks. Existing studies do not unify a localised language model, a graph-RL path policy, three-layer deterministic verification, and transactional rollback in a single operational loop while measuring the runtime overhead of each component.
 
-This paper makes five contributions: (1) the CL-ANM architecture; (2) a 3,960-episode simulation benchmark with four baselines and six ablations; (3) 1,440 held-out unseen-fault generalisation episodes; (4) Mininet/OVS emulation and real Vulkan SLM inferences comparing Llama-3.2-3B vs.\ Qwen2.5-Coder-7B; and (5) the post-hoc CL-ANM-v2 variant.
+In this work, we present the CL-ANM architecture and evaluate it across a simulation benchmark with four baselines and six ablations, held-out unseen fault families, hardware-in-the-loop Mininet emulation, and offline inference comparing 3B and 7B language models on AMD hardware. We also evaluate CL-ANM-v2, a post-hoc variant that pipelines digital-twin dry runs to reduce recovery time.
 
 %% ============================================================
+\FloatBarrier
 \section{Related Work}\label{sec:related}
-\textbf{Intent and LLMs.} Adanza et~al.\ achieve 93\% factual accuracy with retrieval-augmented generation~\cite{adanza}. Phone et~al.\ show 20\% lower orchestration latency with LoRA SLMs~\cite{phone}. Lira et~al.\ observe placeholder and syntax violations in fine-tuned SLM outputs~\cite{lira}. LLNet~\cite{llnet}, NetIntent~\cite{netintent}, and AICOM~\cite{aicom} target SDN and 5G core automation. Nam et~al.\ combine debate and digital twins for VNF workflows~\cite{nam}.
+\paragraph{Intent and language models} Adanza et~al.\ report 93\% factual accuracy using retrieval-augmented generation for network slices~\cite{adanza}. Phone et~al.\ observe 20\% lower orchestration latency when deploying parameter-efficient language models~\cite{phone}. Lira et~al.\ identify syntax and parameter errors in fine-tuned language models~\cite{lira}. LLNet~\cite{llnet}, NetIntent~\cite{netintent}, and AICOM~\cite{aicom} target SDN and 5G core automation. Nam et~al.\ combine debate and digital twins for virtual network function workflows~\cite{nam}.
 
-\textbf{RL for resilience.} Makiyah et~al.\ apply PPO~\cite{ppo} to self-healing in Mininet~\cite{makiyah}. OMARF uses DDQN~\cite{dqn} for offshore industrial networks~\cite{omarf}. QoSentry applies DDQN for DDoS-QoS trade-offs~\cite{qosentry}. All operate without pre-execution verification.
+\paragraph{Reinforcement learning for resilience} Makiyah et~al.\ apply PPO~\cite{ppo} to self-healing in Mininet~\cite{makiyah}. OMARF deploys double DQN~\cite{dqn} for offshore industrial networks~\cite{omarf}. QoSentry applies double DQN to balance DDoS mitigation and quality of service~\cite{qosentry}. These controllers execute actions directly on the data plane without pre-execution verification gates.
 
-\textbf{Safety.} Al Malwi et~al.\ build a constrained-RL shield for 5G-IoT intrusion response~\cite{safe5g}. Chen et~al.\ benchmark agentic network management~\cite{gym6g}. Sar\i{}da\c{s} et~al.\ decompose 5G auto-configuration with multi-agent LLMs~\cite{ragma} but validate with another LLM rather than deterministic checks.
+\paragraph{Safety architectures} Al Malwi et~al.\ design a constrained-RL shield for 5G-IoT intrusion response~\cite{safe5g}. Chen et~al.\ benchmark agentic network management frameworks~\cite{gym6g}. Sar\i{}da\c{s} et~al.\ decompose 5G auto-configuration with multi-agent language models~\cite{ragma}, validating plans with an auxiliary language model rather than deterministic rules.
 
 %% ============================================================
+\FloatBarrier
 \section{CL-ANM Design}\label{sec:design}
 
 \begin{figure*}[t]\centering
-\includegraphics[width=\textwidth]{fig_architecture.jpg}
-\caption{CL-ANM closed-loop autonomous network management architecture: 1-Hz telemetry collection, EWMA anomaly classification, localized SLM deliberation with gated multi-role debate, GraphSAGE-PPO path scoring, three-layer deterministic verification ($L_1 \to L_2 \to L_3$), and transactional execution with rollback.}\label{fig:arch}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  box/.style={draw=blue!70!black, fill=blue!3, rounded corners=3pt, line width=0.8pt, align=center, inner sep=4pt},
+  hdr/.style={fill=blue!80!black, text=white, font=\sffamily\bfseries\scriptsize, rounded corners=2pt, inner sep=3pt, minimum width=2.1cm},
+  subgreen/.style={draw=green!60!black, fill=green!8, rounded corners=2pt, align=center, inner sep=2.5pt, font=\sffamily\tiny},
+  subred/.style={draw=red!70!black, fill=red!8, rounded corners=2pt, align=center, inner sep=2.5pt, font=\sffamily\tiny},
+  subgray/.style={draw=gray!50, fill=white, rounded corners=2pt, align=center, inner sep=2.5pt, font=\sffamily\tiny},
+  arr/.style={-{Stealth[scale=0.9]}, line width=1pt, draw=blue!80!black},
+  fbarr/.style={-{Stealth[scale=0.9]}, line width=1pt, draw=red!70!black, dashed},
+  decision/.style={diamond, draw=green!70!black, fill=green!15, aspect=1.2, inner sep=1.5pt, font=\sffamily\bfseries\tiny, align=center}
+]
+
+% 1. Data Plane
+\node[box, text width=2.2cm, minimum height=3.8cm] (b1) at (0,0) {};
+\node[hdr] at (b1.north) {1. Data Plane};
+\node[subgray, text width=2.0cm, below=0.35cm of b1.north] (b1_top) {\textbf{vSwitch / Mininet}\\ \dots S_N$ Switches};
+\node[subgray, text width=2.0cm, below=0.15cm of b1_top] (b1_bot) {\textbf{Telemetry Collector}\\1\,Hz Polling\\Port bytes, loss, queues};
+
+% 2. Telemetry & Anomaly
+\node[box, text width=2.2cm, minimum height=3.8cm, right=0.4cm of b1] (b2) {};
+\node[hdr] at (b2.north) {2. Anomaly Det.};
+\node[subgray, text width=2.0cm, below=0.35cm of b2.north] (b2_top) {\textbf{EWMA Detector}\\Multi-window\\Flags $\ge 2$ polls};
+\node[subgray, text width=2.0cm, below=0.15cm of b2_top] (b2_bot) {\textbf{Evidence Classifier}\\Link fail, DDoS,\\Misconfig, Congest.};
+
+% 3. Cognitive Deliberation
+\node[box, text width=2.5cm, minimum height=3.8cm, right=0.4cm of b2] (b3) {};
+\node[hdr] at (b3.north) {3. LM Planner};
+\node[subgray, text width=2.3cm, below=0.35cm of b3.north] (b3_top) {\textbf{Localised LM (Vulkan)}\\Qwen2.5-7B / Llama-3B\\Emits JSON plan};
+\node[subred, text width=2.3cm, below=0.15cm of b3_top] (b3_bot) {\textbf{Gated Debate}\\[1pt]Conf $< 0.75 \lor \text{Risk} > 0.30$\\Proposer $\leftrightarrow$ Critic $\leftrightarrow$ Safety};
+
+% 4. Graph-RL
+\node[box, text width=2.2cm, minimum height=3.8cm, right=0.4cm of b3] (b4) {};
+\node[hdr] at (b4.north) {4. Graph-RL};
+\node[subgray, text width=2.0cm, below=0.35cm of b4.north] (b4_top) {\textbf{GraphSAGE}\\2-layer, mean aggr.\\Node dim=4, Hid=16};
+\node[subgray, text width=2.0cm, below=0.15cm of b4_top] (b4_bot) {\textbf{PPO Policy}\\Scores {=}4$ paths\\per flow};
+
+% 5. Verification Gate
+\node[box, text width=2.4cm, minimum height=3.8cm, right=0.4cm of b4] (b5) {};
+\node[hdr] at (b5.north) {5. 3-Layer Verifier};
+\node[subgreen, text width=2.2cm, below=0.35cm of b5.north] (l1) {\textbf{L1: Whitelist}\\Ports/links existence};
+\node[subgreen, text width=2.2cm, below=0.1cm of l1] (l2) {\textbf{L2: Invariants}\\Loop-free DFS, valid ACL};
+\node[subgreen, text width=2.2cm, below=0.1cm of l2] (l3) {\textbf{L3: Digital Twin}\\Dry-run $\Delta G \ge 0.01$};
+
+% Decision Diamond
+\node[decision, right=0.25cm of b5] (d1) {Pass?};
+
+% 6. Transactional Execution
+\node[box, text width=2.4cm, minimum height=3.8cm, right=0.45cm of d1] (b6) {};
+\node[hdr] at (b6.north) {6. Execution};
+\node[subgray, text width=2.2cm, below=0.35cm of b6.north] (b6_1) {\textbf{Pre-state Snapshot}\\OpenFlow Flow-Mod};
+\node[subgray, text width=2.2cm, below=0.1cm of b6_1] (b6_2) {\textbf{10\,s Watch Window}\\Goodput $\ge 95\%$};
+\node[subgreen, text width=2.2cm, below=0.1cm of b6_2] (b6_3) {\textbf{Commit} / \textbf{Rollback}\\Rollback on $\Delta G < 0.02$};
+
+% Fallback Node
+\node[subred, text width=2.2cm, below=0.7cm of d1] (fb) {
+  $\le 3$ Retries\\
+  $\to$ \textbf{Static Fallback (B2)}
+};
+
+% Connecting Arrows
+\draw[arr] (b1) -- (b2);
+\draw[arr] (b2) -- (b3);
+\draw[arr] (b3) -- (b4);
+\draw[arr] (b4) -- (b5);
+\draw[arr] (b5) -- (d1);
+\draw[arr] (d1) -- node[above, font=\tiny\bfseries] {Yes} (b6);
+\draw[fbarr] (d1) -- node[right, font=\tiny\bfseries] {No} (fb);
+\draw[fbarr] (fb) -| (b6.south);
+
+% Top Feedback Loop
+\draw[arr, dashed] (b6.north) -- ++(0,0.3) -| node[above, near start, font=\tiny\bfseries] {Closed-Loop State Feedback} (b1.north);
+
+\end{tikzpicture}%
+}
+\caption{CL-ANM closed-loop autonomous network management architecture: 1-Hz telemetry collection, EWMA anomaly classification, localised LM deliberation with gated multi-role debate, GraphSAGE-PPO path scoring, three-layer deterministic verification ($L_1 \to L_2 \to L_3$), and transactional execution with rollback.}\label{fig:arch}
 \end{figure*}
 
-Figure~\ref{fig:arch} illustrates the complete CL-ANM closed loop. Telemetry (port counters, link byte rates) is sampled at 1\,Hz. An EWMA detector flags anomalies persisting two polls and classifies evidence: link failure, DDoS, misconfiguration, congestion. A localized SLM then drafts a JSON plan of whitelisted actions (\texttt{reroute}, \texttt{acl\_add}, \texttt{config\_revert}). A \emph{gated debate} of four roles (Proposer, Critic, Security, Safety) runs only if model confidence $<0.75$, plan risk $>0.30$, or evidence classes conflict.
+Figure~\ref{fig:arch} illustrates the complete CL-ANM closed loop. Telemetry (port counters, link byte rates) is sampled at 1\,Hz. An EWMA detector flags anomalies persisting across two polls and classifies evidence: link failure, DDoS, misconfiguration, or congestion. A localised language model then drafts a JSON plan using an action whitelist (\texttt{reroute}, \texttt{acl\_add}, \texttt{config\_revert}). A gated debate of four roles (Proposer, Critic, Security, Safety) runs only if model confidence $<0.75$, plan risk $>0.30$, or evidence classes conflict.
 
-\textbf{PPO path selection.} For \texttt{reroute}, up to $K{=}4$ candidate paths per flow are scored by a PPO policy~\cite{ppo} using a 2-layer GraphSAGE encoder~\cite{graphsage}:
+\paragraph{Path selection with PPO} For \texttt{reroute}, up to $K{=}4$ candidate paths per flow are scored by a PPO policy~\cite{ppo} using a 2-layer GraphSAGE encoder~\cite{graphsage}:
 \begin{equation}
 h_v^{(k)} = \sigma\!\left(W^{(k)}\cdot\mathrm{CONCAT}\!\left(h_v^{(k-1)},\,\mathrm{MEAN}_{u\in\mathcal{N}(v)}h_u^{(k-1)}\right)\right).
 \end{equation}
 
-\textbf{Verification.} Every plan must satisfy $L_1 \to L_2 \to L_3$. L1: JSON schema, action whitelist, and device/link existence. L2: loop-free paths, no routing over failed links, ACL targets show anomalous transmit rates. L3: digital-twin dry-run must predict $\Delta G\ge0.01$. Failed plans are retried up to three times; otherwise the rule engine takes over.
+\paragraph{Three-layer verification} Every plan must satisfy $L_1 \to L_2 \to L_3$. Gate L1 checks JSON schema, action whitelisting, and device/link existence. Gate L2 checks loop-free paths, prohibits routing over failed links, and ensures ACL targets show anomalous transmit rates. Gate L3 executes a discrete-event digital-twin dry run requiring predicted goodput improvement $\Delta G\ge0.01$. Plans failing any check are retried up to three times; if all retries fail, control passes to the deterministic rule engine.
 
-\textbf{Execution.} A state snapshot is taken before applying verified OpenFlow changes. After a 10\,s watch window, the change is committed unless goodput fails to improve by $\ge0.02$ while below 95\% of baseline; otherwise it is rolled back and the rule engine runs.
+\paragraph{Transactional execution and rollback} A state snapshot is recorded before applying OpenFlow changes. After a 10\,s watch window, the change is committed if goodput improves by $\ge0.02$ or exceeds 95\% of baseline; otherwise it is rolled back and the rule engine executes.
 
 %% ============================================================
+\FloatBarrier
 \section{Experimental Method}\label{sec:method}
 \subsection{Simulator, Topologies, and Failure Scenarios}
-A 1\,Hz flow-level discrete-event simulator on NetworkX models link-scale bottlenecks, noisy telemetry, and fault persistence over 90\,s episodes (onset at $T=20\text{ s}$). We evaluate three topologies:
+A 1\,Hz flow-level discrete-event simulator implemented in NetworkX models link-scale bottlenecks, noisy telemetry, and fault persistence over 90\,s episodes with fault onset at $T=20\text{ s}$. We evaluate three topologies:
 \begin{itemize}
-\item \textbf{T1 (3-Switch Tree):} 3 switches, 4 hosts, 2 inter-switch links. Every switch-switch link is a bridge ($nx.bridges(G)$). Any link failure strictly partitions the topology with zero alternative paths. Consequently, link-rerouting scenarios (S1 link failure, S4 cascading failure, and S5 compound link+DDoS) are topologically impossible without severing hosts. Thus, only S2 (DDoS filtering) and S3 (misconfiguration revert) are evaluated on T1 ($2 + 5 + 5 = 12$ topology $\times$ scenario cells in the main benchmark).
+\item \textbf{T1 (3-Switch Tree):} 3 switches, 4 hosts, 2 inter-switch links. Every switch-switch link is a bridge ($nx.bridges(G)$). Any link failure partitions the topology with no alternative path. Link-rerouting scenarios (S1, S4, and S5) cannot be executed without disconnecting hosts. We therefore evaluate only S2 (DDoS filtering) and S3 (misconfiguration revert) on T1, yielding 12 topology $\times$ scenario cells in the benchmark.
 \item \textbf{T2 (Abilene Backbone):} 11 switches, 14 bi-directional links, 12 hosts, representing wide-area mesh topologies with moderate alternative path redundancy.
 \item \textbf{T3 ($k{=}4$ Fat-Tree):} 20 switches (4 core, 8 aggregation, 8 edge), 16 hosts, 48 links, providing multi-path bisection bandwidth.
 \end{itemize}
 
-The main benchmark evaluates five standard failure scenarios: S1 single link failure, S2 volumetric DDoS flood, S3 routing misconfiguration, S4 cascading link overload failure, and S5 compound S1+S2 failure.
+The main benchmark evaluates five failure scenarios: S1 single link failure, S2 volumetric DDoS flood, S3 routing misconfiguration, S4 cascading link overload failure, and S5 compound S1+S2 failure.
 
-\textbf{Held-Out Unseen Fault Families (U1--U4).} To evaluate out-of-distribution generalisation (1,440 episodes across seeds 2001--2030), four unseen fault families were evaluated:
+\paragraph{Held-out unseen fault families (U1--U4)} To evaluate out-of-distribution generalisation (1,440 episodes across seeds 2001--2030), four unseen fault families were evaluated:
 \begin{itemize}
 \item \textbf{U1 (Dynamic Multi-Source DDoS):} 4 distributed attacker hosts flooding the bottleneck at $3.5\times$ link capacity with dynamic source IP rotation ($\alpha=0.50$ baseline traffic).
 \item \textbf{U2 (Fast Cascading Failure):} Accelerated link overload cascade with a 4-second cascade window to overload collapse (shortened from 8\,s in training scenario S4), $\alpha=0.60$.
@@ -88,23 +168,23 @@ The main benchmark evaluates five standard failure scenarios: S1 single link fai
 \end{itemize}
 
 \subsection{Configurations and Hyperparameters}
-We benchmark: B0 unmanaged; B1 zero-shot LLM (unguarded); B2 deterministic rule engine; B3 single-agent DQN~\cite{dqn}; FULL (CL-ANM); and six ablations A1--A6 (no verification, no debate, no RL, no rollback, flat MLP encoder, debate always-on).
+We benchmark: B0 unmanaged; B1 zero-shot language model (unguarded); B2 deterministic rule engine; B3 single-agent DQN~\cite{dqn}; FULL (CL-ANM); and six ablations A1--A6 (no verification, no debate, no RL, no rollback, flat MLP encoder, debate always-on).
 
-\textbf{Component Hyperparameters.} All components were parameterized as follows:
+\paragraph{Component hyperparameters} All components were parameterised as follows:
 \begin{itemize}
 \item \textbf{EWMA Detector:} 1\,Hz polling interval, persistence threshold $\ge 2$ consecutive polling intervals, history smoothing window 4\,s ($\alpha=0.3$).
-\item \textbf{GraphSAGE Encoder:} 2 layers, MEAN neighbor aggregation, node feature dimension 4 (switch load, port drop rate, flow count, operational status), hidden dimension 16, candidate path feature dimension 5, global graph feature dimension 4.
+\item \textbf{GraphSAGE Encoder:} 2 layers, MEAN neighbour aggregation, node feature dimension 4 (switch load, port drop rate, flow count, operational status), hidden dimension 16, candidate path feature dimension 5, global graph feature dimension 4.
 \item \textbf{PPO Path Policy:} Actor-critic MLP head on GraphSAGE embeddings, clip parameter $\epsilon=0.2$, value loss coefficient $c_v=0.5$, entropy coefficient $c_e=0.01$, learning rate $\eta=2\times 10^{-3}$, Adam optimizer, batch size 64, $K=4$ epochs per PPO update.
 \item \textbf{DQN Baseline (B3):} Multi-layer perceptron $8 \to 64 \to 64 \to 6$, experience replay buffer size 50,000, discount factor $\gamma=0.9$, learning rate $\eta=10^{-3}$, $\varepsilon$-greedy exploration decaying from 1.0 to 0.05 over 5,000 steps.
 \item \textbf{Three-Layer Verifier (L1--L3):} L1 checks JSON schema syntax against an action whitelist (\texttt{reroute}, \texttt{acl\_add}, \texttt{config\_revert}); L2 verifies semantic loop-freedom via DFS and prohibits routing over failed links; L3 performs a discrete-event digital twin dry-run requiring projected goodput improvement $\Delta G \ge 0.01$, Gaussian telemetry noise scale $\sigma=0.03$, dry-run computation budget 1.0\,s, and a maximum of 3 retries before escalating to deterministic rule fallback.
 \end{itemize}
 
-\subsection{Assumed vs.\ Measured SLM Parameters}
-The simulator uses an error model ($p_{\text{diag}}=0.85, p_{\text{hal}}=0.10$, latency lognormal $\mu=1.5\text{ s}$). These are \emph{assumptions}. Table~\ref{tab:assump} contrasts them with values measured on hardware.
+\subsection{Assumed versus Measured LM Parameters}
+The simulation uses an assumed error model ($p_{\text{diag}}=0.85, p_{\text{hal}}=0.10$, latency lognormal $\mu=1.5\text{ s}$). Table~\ref{tab:assump} contrasts these assumptions with values measured on physical hardware.
 
-\begin{table}[h]\centering\small
-\caption{Assumed simulation vs.\ empirically measured parameters.}\label{tab:assump}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lrr@{}}
+\begin{table}[t]\centering\footnotesize\setlength{\tabcolsep}{4pt}
+\caption{Assumed simulation versus empirically measured parameters.}\label{tab:assump}%
+\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lrr@{}}
 \toprule
 Parameter & Simulation & Measured \\
 \midrule
@@ -118,13 +198,14 @@ Watch window & 10\,s & 10\,s wall-clock \\
 \end{tabular*}
 \end{table}
 
-\subsection{Mininet Emulation and SLM Hardware Tests}
-Mininet 2.3.0 with OVS 3.7.1 (userspace datapath) replays matching episode seeds; faults injected via \texttt{ip link set}/\texttt{hping3}/\texttt{ovs-ofctl}. SLM offline evaluation: 100 test samples, AMD Radeon RX 580 (Vulkan), two model tiers: Llama-3.2-3B (Q4\_K\_M, 2.0\,GB) and Qwen2.5-Coder-7B (Q4\_K\_M, 4.7\,GB).
+\subsection{Mininet Emulation and Hardware Tests}
+Mininet 2.3.0 with OVS 3.7.1 (userspace datapath) replays matching episode seeds with faults injected via \texttt{ip link set}, \texttt{hping3}, and \texttt{ovs-ofctl}. Offline model evaluation was conducted on 100 test samples using an AMD Radeon RX 580 (Vulkan backend) across two model tiers: Llama-3.2-3B (Q4\_K\_M, 2.0\,GB) and Qwen2.5-Coder-7B (Q4\_K\_M, 4.7\,GB).
 
 \subsection{Metrics}
-TRT: time from onset until goodput $\ge95$\% for 5\,s. MTTR: TRT plus watch window. Censored at 70\,s. Bootstrap 95\% CIs (2,000 samples). Kruskal--Wallis + Holm-corrected Mann--Whitney; Cliff's $\delta$ for effect size.
+We report Time to Recovery (TRT), defined as the elapsed time from fault onset until goodput reaches at least 95\% of baseline for 5\,s. Mean Time to Recovery (MTTR) adds the 10\,s watch window to TRT. Episodes unrecovered at 70\,s are censored. Statistical comparisons use Kruskal--Wallis and Holm-corrected Mann--Whitney tests; Cliff's $\delta$ measures effect size.
 
 %% ============================================================
+\FloatBarrier
 \section{Results}\label{sec:results}
 
 \subsection{Overall Benchmark}
@@ -142,51 +223,54 @@ TRT: time from onset until goodput $\ge95$\% for 5\,s. MTTR: TRT plus watch wind
 \end{minipage}
 \end{figure*}
 
-\begin{table*}[h]\centering\footnotesize
-\caption{Pooled benchmark performance (top) and safety/overhead (bottom) across 3,960 episodes (12 cells $\times$ 30 seeds).}\label{tab:main}\label{tab:over}%
-\setlength{\tabcolsep}{4pt}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lrrrrrr@{}}
+\begin{table*}[t]\centering\footnotesize\setlength{\tabcolsep}{5pt}
+\caption{Pooled benchmark performance means (top) and safety/overhead (bottom) across 3,960 episodes (12 cells $\times$ 30 seeds). Full metrics with 95\% confidence intervals appear in Appendix Table~\ref{tab:main_ci}.}\label{tab:main}\label{tab:over}%
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{lrrrr}
 \toprule
-\multicolumn{7}{l}{\textbf{(a) Pooled Performance Metrics (MTTR and TRT censored at 70\,s)}} \\
-Configuration & Recovered (\%) & MTTR (s) & TRT (s) & Loss (\%) & Avail. (\%) & p95 lat. (ms) \\
+\multicolumn{5}{l}{\textbf{(a) Pooled Performance Metrics (Means across 3,960 episodes; MTTR censored at 70\,s)}} \\
+Configuration & Recovered (\%) & MTTR (s) & Loss (\%) & p95 lat. (ms) \\
 \midrule
-B0 Unmanaged & 7.8 [5.3, 10.8] & 64.9 [63.1, 66.6] & 64.6 [62.6, 66.5] & 36.6 [34.1, 39.2] & 64.1 [62.0, 66.2] & 188.8 [172.6, 205.2] \\
-B1 Zero-shot LLM & 95.6 [93.3, 97.5] & 13.3 [12.1, 14.8] & 8.6 [7.1, 10.0] & 3.7 [3.0, 4.4] & 96.5 [95.9, 97.1] & 123.7 [116.1, 131.8] \\
-B2 Static rules & 79.2 [74.7, 83.3] & 19.9 [17.3, 22.6] & 16.0 [13.1, 19.0] & 7.4 [5.8, 9.2] & 94.0 [92.6, 95.3] & 100.7 [94.6, 107.3] \\
-B3 Single DQN & 95.6 [93.3, 97.5] & 9.7 [8.4, 11.0] & 4.9 [3.6, 6.5] & 2.8 [1.9, 3.8] & 97.6 [96.8, 98.2] & 112.9 [105.9, 120.4] \\
-CL-ANM (full) & 87.5 [84.2, 90.8] & 26.6 [24.7, 28.6] & 15.3 [13.1, 17.6] & 8.7 [7.3, 10.1] & 92.1 [90.9, 93.3] & 162.4 [151.9, 173.1] \\
-A1 w/o verification & 84.2 [80.6, 87.8] & 27.7 [25.6, 29.9] & 16.8 [14.4, 19.4] & 8.3 [6.9, 9.7] & 92.5 [91.4, 93.7] & 155.1 [144.7, 165.7] \\
-A2 w/o debate & 87.5 [83.9, 90.8] & 24.9 [22.7, 27.0] & 12.6 [10.4, 15.1] & 7.0 [5.7, 8.4] & 93.8 [92.7, 94.9] & 138.1 [128.2, 147.7] \\
-A3 w/o RL & 86.7 [83.1, 90.3] & 27.4 [25.3, 29.3] & 16.6 [14.4, 19.0] & 9.4 [7.9, 10.9] & 91.6 [90.3, 92.7] & 159.6 [149.5, 170.3] \\
-A4 w/o rollback & 88.1 [84.7, 91.4] & 19.4 [17.5, 21.5] & 15.0 [12.8, 17.3] & 8.5 [7.2, 9.9] & 92.2 [91.0, 93.4] & 161.3 [150.7, 172.6] \\
-A5 w/o graph enc. & 87.5 [84.2, 90.8] & 26.9 [24.9, 28.9] & 15.8 [13.9, 17.9] & 8.7 [7.3, 10.1] & 92.0 [90.8, 93.0] & 158.2 [147.1, 169.8] \\
-A6 debate always-on & 88.1 [84.4, 91.4] & 26.3 [24.3, 28.2] & 14.7 [12.6, 17.0] & 8.5 [7.1, 9.9] & 92.3 [91.1, 93.4] & 162.1 [151.1, 173.4] \\
+B0 Unmanaged & 7.8 & 64.9 & 36.6 & 188.8 \\
+B1 Zero-shot LLM & 95.6 & 13.3 & 3.7 & 123.7 \\
+B2 Static rules & 79.2 & 19.9 & 7.4 & 100.7 \\
+B3 Single DQN & 95.6 & 9.7 & 2.8 & 112.9 \\
+CL-ANM (full) & 87.5 & 26.6 & 8.7 & 162.4 \\
+A1 w/o verification & 84.2 & 27.7 & 8.3 & 155.1 \\
+A2 w/o debate & 87.5 & 24.9 & 7.0 & 138.1 \\
+A3 w/o RL & 86.7 & 27.4 & 9.4 & 159.6 \\
+A4 w/o rollback & 88.1 & 19.4 & 8.5 & 161.3 \\
+A5 w/o graph enc. & 87.5 & 26.9 & 8.7 & 158.2 \\
+A6 debate always-on & 88.1 & 26.3 & 8.5 & 162.1 \\
 \bottomrule
-\end{tabular*}
+\end{tabular}
+\end{adjustbox}
 \vspace{6pt}
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lrrrrrrrr@{}}
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{lrrrrrrr}
 \toprule
-\multicolumn{9}{l}{\textbf{(b) Safety, Verification, and Rollback Overhead}} \\
-Configuration & LLM calls & Tokens & Ctl ms/ep & Invalid gen. (\%) & Invalid exec. (\%) & Rejected & Rollbacks & Fallback (\%) \\
+\multicolumn{8}{l}{\textbf{(b) Safety, Verification, and Rollback Overhead}} \\
+Configuration & LLM calls & Tokens & Invalid gen. (\%) & Invalid exec. (\%) & Rejected & Rollbacks & Fallback (\%) \\
 \midrule
-B0 Unmanaged & 0.0 & 0 & 0 & -- & -- & 0.00 & 0.00 & 0 \\
-B1 Zero-shot LLM & 8.5 & 2532 & 7 & 8.4 & 8.3 & 0.00 & 0.00 & 0 \\
-B2 Static rules & 0.0 & 0 & 11 & -- & -- & 0.00 & 0.00 & 0 \\
-B3 Single DQN & 0.0 & 0 & 11 & -- & -- & 0.00 & 0.00 & 0 \\
-CL-ANM (full) & 14.9 & 4430 & 21 & 9.6 & 0.1 & 1.95 & 0.07 & 44 \\
-A1 w/o verification & 16.4 & 4932 & 15 & 7.4 & 6.3 & 0.00 & 0.16 & 16 \\
-A2 w/o debate & 3.5 & 1049 & 15 & 8.2 & 0.5 & 1.96 & 0.11 & 49 \\
-A3 w/o RL & 15.3 & 4576 & 17 & 10.1 & 0.1 & 2.00 & 0.06 & 40 \\
-A4 w/o rollback & 16.3 & 4896 & 23 & 9.4 & 0.2 & 2.22 & 0.00 & 42 \\
-A5 w/o graph enc. & 15.7 & 4722 & 21 & 11.0 & 0.3 & 2.06 & 0.04 & 40 \\
-A6 debate always-on & 19.0 & 5641 & 19 & 7.1 & 0.1 & 1.58 & 0.08 & 41 \\
+B0 Unmanaged & 0.0 & 0 & -- & -- & 0.00 & 0.00 & 0 \\
+B1 Zero-shot LLM & 8.5 & 2532 & 8.4 & 8.3 & 0.00 & 0.00 & 0 \\
+B2 Static rules & 0.0 & 0 & -- & -- & 0.00 & 0.00 & 0 \\
+B3 Single DQN & 0.0 & 0 & -- & -- & 0.00 & 0.00 & 0 \\
+CL-ANM (full) & 14.9 & 4430 & 9.6 & 0.1 & 1.95 & 0.07 & 44 \\
+A1 w/o verification & 16.4 & 4932 & 7.4 & 6.3 & 0.00 & 0.16 & 16 \\
+A2 w/o debate & 3.5 & 1049 & 8.2 & 0.5 & 1.96 & 0.11 & 49 \\
+A3 w/o RL & 15.3 & 4576 & 10.1 & 0.1 & 2.00 & 0.06 & 40 \\
+A4 w/o rollback & 16.3 & 4896 & 9.4 & 0.2 & 2.22 & 0.00 & 42 \\
+A5 w/o graph enc. & 15.7 & 4722 & 11.0 & 0.3 & 2.06 & 0.04 & 40 \\
+A6 debate always-on & 19.0 & 5641 & 7.1 & 0.1 & 1.58 & 0.08 & 41 \\
 \bottomrule
-\end{tabular*}
+\end{tabular}
+\end{adjustbox}
 \end{table*}
 
-All active controllers vastly outperform unmanaged B0 (7.8\% recovery, Table~\ref{tab:main}). B3 (DQN) achieves best MTTR (9.7\,s) and lowest loss (2.8\%). CL-ANM's MTTR is 26.6\,s [24.7, 28.6] --- significantly worse than B1, B2, B3, A4 (Holm-corrected Mann-Whitney, Cliff's $\delta = 0.72, 0.59, 0.88, 0.53$; all $p{<}10^{-3}$). Verification reduces invalid executions from 8.3\% (B1) to 0.1\% (FULL). CL-ANM fell back to rules in 44\% of episodes. Figure~\ref{fig:cdf_km} shows the MTTR CDF and Kaplan--Meier curves, while Figure~\ref{fig:lat_loss} plots loss versus latency.
+All active controllers outperform unmanaged B0 (Table~\ref{tab:main}). B3 (DQN) achieves the lowest MTTR (9.7\,s) and lowest loss (2.8\%). CL-ANM achieves an MTTR of 26.6\,s, which is higher than B1, B2, B3, and A4 (Holm-corrected Mann--Whitney, Cliff's $\delta = 0.72, 0.59, 0.88, 0.53$; all $p{<}10^{-3}$). Verification reduces executed invalid actions from 8.3\% (B1) to 0.1\% (FULL). CL-ANM fell back to static rules in 44\% of episodes. Figure~\ref{fig:cdf_km} shows the MTTR cumulative distribution and Kaplan--Meier survival curves; Figure~\ref{fig:lat_loss} plots loss versus latency.
 
-\textbf{Fallback Attribution Analysis.} To disentangle the performance of the learned SLM/RL pipeline from the fallback mechanism, we isolate episodes where CL-ANM committed an SLM/RL plan from those where it fell back to B2 static rules (44.2\% of episodes, $N{=}159/360$). For episodes committed by the SLM/RL pipeline (55.8\%, $N{=}201$), CL-ANM achieved a recovery rate of \textbf{98.5\%}, a mean MTTR of \textbf{18.9\,s}, and mean packet loss of \textbf{3.6\%}. Conversely, in the 44.2\% of episodes where verification rejected candidate plans three times and triggered rule fallback, recovery dropped to \textbf{73.6\%}, MTTR lengthened to \textbf{36.4\,s}, and packet loss rose to \textbf{15.2\%}. Similarly, for CL-ANM-v2, the 58.1\% committed episodes achieved 97.6\% recovery, 17.0\,s MTTR, and 2.7\% packet loss, compared to 71.5\% recovery and 36.2\,s MTTR on the 41.9\% fallback episodes. This proves that when SLM/RL plans clear deterministic verification, the hybrid pipeline achieves near-perfect recovery and low latency; pooled degradation is driven by difficult edge cases triggering verification retries and rule fallback.
+\paragraph{Fallback attribution analysis} To distinguish the behaviour of the learned pipeline from the fallback mechanism, we isolate episodes where CL-ANM committed an LM/RL plan from those where it fell back to B2 static rules (44.2\% of episodes, $N{=}159/360$). For episodes committed by the LM/RL pipeline (55.8\%, $N{=}201$), CL-ANM achieved a recovery rate of 98.5\%, a mean MTTR of 18.9\,s, and mean packet loss of 3.6\%. In the 44.2\% of episodes where verification rejected candidate plans three times and triggered rule fallback, recovery dropped to 73.6\%, MTTR lengthened to 36.4\,s, and packet loss rose to 15.2\%. For CL-ANM-v2, the 58.1\% of committed episodes achieved 97.6\% recovery, 17.0\,s MTTR, and 2.7\% packet loss, compared to 71.5\% recovery and 36.2\,s MTTR on the 41.9\% fallback episodes. These measurements suggest that when candidate plans pass deterministic verification, the pipeline recovers 98.5\% of episodes with an MTTR of 18.9\,s; pooled degradation reflects difficult scenarios that trigger verification retries and rule fallback.
 
 \subsection{Scenario Breakdown}
 
@@ -203,11 +287,13 @@ All active controllers vastly outperform unmanaged B0 (7.8\% recovery, Table~\re
 \end{minipage}
 \end{figure*}
 
-\begin{table*}[h]\centering\scriptsize
+\begin{table*}[t]\centering\footnotesize\setlength{\tabcolsep}{4pt}
 \caption{Scenario breakdown across S1--S5: recovery rate (\%) and mean MTTR (s, censored at 70\,s).}\label{tab:rec}\label{tab:mttr}%
-\setlength{\tabcolsep}{3pt}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lrrrrrrrrrrr@{}}
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{lrrrrr@{\hspace{12pt}}rrrrrr}
 \toprule
+& \multicolumn{5}{c}{\textbf{Baselines and Full Controller}} & \multicolumn{6}{c}{\textbf{Ablations A1--A6}} \\
+\cmidrule(lr){2-6}\cmidrule(lr){7-12}
 Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
 \midrule
 \multicolumn{12}{l}{\textit{(a) Recovery Rate (\%)}} \\
@@ -224,16 +310,17 @@ S3 Misconfig & 68.6 & 9.3 & 57.2 & 7.4 & 17.0 & 16.9 & 19.0 & 16.5 & 10.8 & 15.6
 S4 Cascading & 70.0 & 12.4 & 6.0 & 6.0 & 27.0 & 25.7 & 25.4 & 28.5 & 15.2 & 26.8 & 27.3 \\
 S5 Compound & 70.0 & 24.6 & 10.0 & 13.5 & 59.5 & 65.9 & 54.9 & 63.2 & 54.0 & 59.8 & 58.2 \\
 \bottomrule
-\end{tabular*}
+\end{tabular}
+\end{adjustbox}
 \end{table*}
 
-CL-ANM recovers 100\% of S1--S4 episodes (Table~\ref{tab:rec}, Figure~\ref{fig:scenarios}). In S3 (misconfiguration) it substantially outperforms B2 rules (100\% vs.\ 20\%). In S5 (compound), however, its recovery collapses to 25\% while B1, B2, B3 achieve 85--100\%. Tracing per-episode link states: on Abilene S5, CL-ANM loses 2.35 links to overload collapse on average (B1: 0.15, B2: 0.05). The SLM call, dry run, and watch window cumulatively delay flood mitigation past the 8\,s cascade threshold.
+CL-ANM recovers 100\% of S1--S4 episodes (Table~\ref{tab:rec}, Figure~\ref{fig:scenarios}). In S3 (misconfiguration), it recovers 100\% of episodes compared to 20\% for B2 rules. In S5 (compound), however, its recovery drops to 25\% while B1, B2, and B3 achieve 85--100\%. Tracing link states across episodes indicates that on Abilene S5, CL-ANM loses 2.35 links to overload collapse on average (B1: 0.15, B2: 0.05). A contributing factor is that the combined duration of language model inference, dry-run simulation, and watch window delays flood mitigation beyond the 8\,s cascade threshold.
 
 \subsection{Ablation Analysis}
-A1 (no verification): invalid executions rise to 6.3\%, recovery drops to 84.2\% (Figure~\ref{fig:ablation}). A2 (no debate): LLM calls fall from 14.9 to 3.5/ep; MTTR improves slightly (24.9\,s), recovery unchanged---debate's diagnostic accuracy gain (79\%\,$\to$\,91\%) is absorbed by the verifier. A3, A5, A6 are statistically indistinguishable from FULL (Holm $p{=}0.28, 1.0, 1.0$). A4 (no rollback): MTTR \emph{improves} to 19.4\,s---rollback undoes correct partial mitigations when transient overload masks goodput recovery.
+A1 (no verification): executed invalid actions rise to 6.3\%, and recovery drops to 84.2\% (Figure~\ref{fig:ablation}). A2 (no debate): language model calls fall from 14.9 to 3.5 per episode; recovery is unchanged (87.5\%); the diagnostic accuracy gain from debate (79\%\,$\to$\,91\%) is filtered by the verifier. A3, A5, and A6 are statistically indistinguishable from FULL (Holm $p{=}0.28, 1.0, 1.0$). A4 (no rollback): MTTR improves to 19.4\,s. Rollback undoes correct partial mitigations when transient overload masks goodput recovery.
 
 \subsection{Sensitivity to Assumed Error Rates}
-As $p_\text{hal}$ rises from 0.0 to 0.30: B1 recovery falls 94\%\,$\to$\,82\%; CL-ANM recovery rises (0.81\,$\to$\,0.93) and executes zero invalid actions (Figure~\ref{fig:sens}). CL-ANM's MTTR becomes comparable to B1's only at $p_\text{hal}{\approx}0.30$.
+As $p_\text{hal}$ increases from 0.0 to 0.30, B1 recovery falls from 94\% to 82\%, while CL-ANM recovery increases from 0.81 to 0.93 with zero invalid action executions (Figure~\ref{fig:sens}). CL-ANM's MTTR becomes comparable to B1's only at $p_\text{hal}{\approx}0.30$.
 
 \begin{figure*}[h]\centering
 \begin{minipage}[t]{0.49\textwidth}
@@ -249,12 +336,12 @@ As $p_\text{hal}$ rises from 0.0 to 0.30: B1 recovery falls 94\%\,$\to$\,82\%; C
 \end{figure*}
 
 \subsection{Unseen Fault Generalisation}\label{sec:unseen}
-CL-ANM achieves 100\% recovery on U1 (hyper-DDoS) and U2 (rapid cascade, 4\,s window), 93.3\% on U3 (dual-link failure), and degrades to 75\% on U4 (compound storm), as shown in Table~\ref{tab:unseen} and Figure~\ref{fig:unseen}. Performance boundaries track cascade velocity.
+CL-ANM achieves 100\% recovery on U1 (hyper-DDoS) and U2 (rapid cascade, 4\,s window), 93.3\% on U3 (dual-link failure), and 75\% on U4 (compound storm), as reported in Table~\ref{tab:unseen} and Figure~\ref{fig:unseen}.
 
-\begin{table*}[h]\centering\footnotesize
+\begin{table*}[t]\centering\footnotesize\setlength{\tabcolsep}{5pt}
 \caption{Held-out unseen fault families (1,440 episodes, seeds 2001--2030).}\label{tab:unseen}%
-\setlength{\tabcolsep}{4pt}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllllll@{}}
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{lrrrrrrr}
 \toprule
 Configuration & Recovered (\%) & MTTR (s) & TRT (s) & Loss (\%) & Avail. (\%) & p95 Lat (ms) & Fallback (\%) \\
 \midrule
@@ -265,25 +352,40 @@ B3 & 71.2 & 25.9 & 22.3 & 10.3 & 89.2 & 147.5 & 0.0 \\
 CL-ANM (full) & 92.1 & 26.4 & 14.7 & 8.5 & 92.0 & 173.9 & 69.2 \\
 CL-ANM-v2 (post-hoc) & 93.8 & 23.2 & 12.1 & 7.2 & 93.3 & 156.3 & 61.3 \\
 \bottomrule
-\end{tabular*}
+\end{tabular}
+\end{adjustbox}
 \end{table*}
 
 \subsection{Post-Hoc Variant: CL-ANM-v2}\label{sec:v2}
-To isolate whether S5 collapse is inherent to guarded architectures or a pipelining artefact, we designed \textbf{CL-ANM-v2}: (1) overlap LLM call with twin state clone; (2) partial rollback reverting only the failing sub-action; (3) L3 threshold $\Delta G\ge0$ instead of $\Delta G\ge0.01$. \emph{This variant was designed after seeing results and must be treated as post-hoc.}
+To test whether S5 degradation is inherent to guarded architectures or an artefact of serial execution, we evaluated an exploratory variant, \textbf{CL-ANM-v2}, which overlaps the language model call with digital-twin state cloning, applies partial rollback to revert only failing sub-actions, and sets the L3 threshold to $\Delta G\ge0$. This variant was designed after observing benchmark results.
 
-CL-ANM-v2 achieves an overall MTTR of 25.0\,s [22.9, 27.2] (down from 26.6\,s in FULL), reduces mean packet loss from 8.7\% to 8.0\%, lowers rule fallback from 44.2\% to 41.9\%, and improves p95 latency by 17.2\,ms (Table~\ref{tab:v2}, Figure~\ref{fig:v2}). In compound scenario S5, recovery remains challenging at 20.0\% due to the tight 8\,s cascade horizon on Abilene, confirming that while pipelined execution mitigates decision latency, severe compounding cascades require sub-second reactive mitigation or parallel multi-flow flow-mods.
+CL-ANM-v2 achieves an overall MTTR of 25.0\,s [22.9, 27.2] (compared to 26.6\,s for FULL), reduces mean packet loss from 8.7\% to 8.0\%, lowers rule fallback from 44.2\% to 41.9\%, and reduces p95 latency by 17.2\,ms (Table~\ref{tab:v2}, Figure~\ref{fig:v2}). In compound scenario S5, recovery remains at 20.0\% under the 8\,s cascade horizon on Abilene, suggesting that while pipelined execution reduces MTTR, severe compounding cascades in this setting may require sub-second reaction.
 
-\begin{table*}[h]\centering\scriptsize
-\caption{CL-ANM vs.\ CL-ANM-v2 on same seeds (1001--1030).}\label{tab:v2}%
-\setlength{\tabcolsep}{3pt}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllllllll@{}}
+\begin{table*}[t]\centering\footnotesize\setlength{\tabcolsep}{5pt}
+\caption{CL-ANM versus CL-ANM-v2 on matching seeds (1001--1030).}\label{tab:v2}%
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{lrrrrrr}
 \toprule
-Configuration & Recovered (\%) & MTTR (s) & TRT (s) & Loss (\%) & Avail. (\%) & p95 Lat (ms) & Fallbacks (\%) & Rollbacks/ep & Invalid Exec (\%) \\
+\multicolumn{7}{l}{\textbf{(a) Performance Metrics}} \\
+Configuration & Recovered (\%) & MTTR (s) & TRT (s) & Loss (\%) & Avail. (\%) & p95 Lat (ms) \\
 \midrule
-CL-ANM (FULL) & 87.5 & 26.6 & 15.3 & 8.7 & 92.1 & 162.4 & 44.2 & 0.07 & 0.1 \\
-CL-ANM-v2 (post-hoc) & 86.7 & 25.0 & 14.2 & 8.0 & 92.9 & 145.2 & 41.9 & 0.09 & 0.2 \\
+CL-ANM (FULL) & 87.5 & 26.6 & 15.3 & 8.7 & 92.1 & 162.4 \\
+CL-ANM-v2 (post-hoc) & 86.7 & 25.0 & 14.2 & 8.0 & 92.9 & 145.2 \\
 \bottomrule
-\end{tabular*}
+\end{tabular}
+\end{adjustbox}
+\vspace{6pt}
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{lrrr}
+\toprule
+\multicolumn{4}{l}{\textbf{(b) Overhead and Safety Metrics}} \\
+Configuration & Fallbacks (\%) & Rollbacks/ep & Invalid Exec (\%) \\
+\midrule
+CL-ANM (FULL) & 44.2 & 0.07 & 0.1 \\
+CL-ANM-v2 (post-hoc) & 41.9 & 0.09 & 0.2 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
 \end{table*}
 
 \begin{figure}[h]\centering
@@ -292,11 +394,11 @@ CL-ANM-v2 (post-hoc) & 86.7 & 25.0 & 14.2 & 8.0 & 92.9 & 145.2 & 41.9 & 0.09 & 0
 \end{figure}
 
 \subsection{Mininet Emulation Validation}\label{sec:mn}
-Table~\ref{tab:mn} and Figure~\ref{fig:mn} report Mininet/OVS emulation against simulator benchmarks. Hardware-in-the-loop Mininet/OVS emulation across all 150 planned episodes (T1/T2 applicable scenarios, seeds 3001--3005) yields strong recovery-rate rank correlation (Spearman $\rho{=}0.763$, Kendall $\tau{=}0.667$) between simulator and emulator. The empirical Mininet ranking by MTTR ($\text{B1}\succ\text{FULL}\succ\text{B3}\succ\text{B2}\succ\text{B0}$) reveals key physical phenomena: (1)~DQN (B3) achieves 86.7\% recovery and 14.7\,s MTTR, showing that physical OVS flow-mod queuing slightly delays rapid-fire RL actions relative to fluid simulation; (2)~B2 static rules recover only 40.0\% of episodes (MTTR 44.3\,s vs.\ 19.9\,s sim) because volumetric flood traffic saturates the OVS table before static rules take effect; and (3)~CL-ANM (FULL) achieves 100\% recovery with 11.3\,s MTTR, validating that closed-loop verification and dry-run gating effectively stabilise physical OpenFlow datapaths.
+Table~\ref{tab:mn} and Figure~\ref{fig:mn} report Mininet emulation against simulation benchmarks. Hardware-in-the-loop Mininet emulation across all 150 planned episodes (T1 and T2 scenarios, seeds 3001--3005) yields recovery-rate rank correlation (Spearman $\rho{=}0.763$, Kendall $\tau{=}0.667$) with the simulation. The empirical Mininet ranking by MTTR ($\text{B1}\succ\text{FULL}\succ\text{B3}\succ\text{B2}\succ\text{B0}$) exhibits two notable differences from simulation: first, DQN (B3) achieves 86.7\% recovery and 14.7\,s MTTR, where physical software-switch update latency may delay rapid-fire action sequences relative to fluid simulation; second, B2 static rules recover 40.0\% of episodes (MTTR 44.3\,s vs.\ 19.9\,s in simulation), where flood traffic may saturate switch tables or queues before rules take effect. CL-ANM (FULL) achieves 100\% recovery with 11.3\,s MTTR in emulation, showing that verification gating remains effective on physical OpenFlow switches.
 
-\begin{table}[h]\centering\footnotesize
-\caption{Sim vs.\ Mininet/OVS emulation rankings (empirical; full 150-episode evaluation across Tier M1).}\label{tab:mn}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllll@{}}
+\begin{table}[t]\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Simulation versus Mininet emulation rankings (empirical; full 150-episode evaluation across Tier M1).}\label{tab:mn}%
+\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lrrrrr@{}}
 \toprule
 Configuration & Sim Rec (\%) & MN Rec (\%) & Sim MTTR (s) & MN MTTR (s) & Sim Loss (\%) \\
 \midrule
@@ -314,12 +416,12 @@ CL-ANM (full) & 87.5 & 100.0 & 26.6 & 11.3 & 8.7 \\
 \caption{Simulator vs.\ Mininet performance comparison across MTTR and recovery rate.}\label{fig:mn}
 \end{figure}
 
-\subsection{SLM Model-Scaling Ablation}\label{sec:slm}
-Scaling to 7B eliminates inventory hallucinations ($p_{\text{hal}}$: 23.0\%\,$\to$\,0.0\%) and achieves 100\% JSON syntax validity (Table~\ref{tab:slm}, Figure~\ref{fig:scaling}). However, diagnostic accuracy ($p_\text{diag}$) collapses from 46.9\% to 18.7\%, while adversarial rejection rises from 37.9\% to 77.8\%. Analysis of the 100 offline evaluation traces reveals that this collapse is driven by conservative over-refusal under prompt safety guards: when instructed to prioritize whitelisting and fault safety, Qwen2.5-Coder-7B classified 74\% of non-trivial failure topologies as \texttt{infeasible\_or\_adversarial} (emitting empty action sets). This completely avoids device hallucinations but suppresses actionable recovery plans. Consequently, parameter scaling without domain-specific fine-tuning trades syntactic hallucination for operational over-refusal, proving that deterministic L1--L3 verifiers remain indispensable even with larger foundation models. Inference latency also increases by 2,002\,ms per call (+48.1\%).
+\subsection{Language Model Scaling Ablation}\label{sec:slm}
+Scaling to 7B parameters reduces inventory hallucinations ($p_{\text{hal}}$: 23.0\%\,$\to$\,0.0\%) and achieves 100\% JSON syntax validity (Table~\ref{tab:slm}, Figure~\ref{fig:scaling}). However, diagnostic accuracy ($p_\text{diag}$) falls from 46.9\% to 18.7\%, while adversarial rejection increases from 37.9\% to 77.8\%. Analysis of offline evaluation traces indicates that this drop is associated with conservative refusals: under safety instructions, Qwen2.5-Coder-7B frequently classified non-trivial topologies as \texttt{infeasible\_or\_adversarial}, emitting empty action sets. While this behaviour avoids device hallucinations, it suppresses actionable recovery plans. In this evaluation, scaling parameter count without task-specific fine-tuning traded hallucinations for operational refusals. Inference latency also increased by 2,002\,ms per call (+48.1\%).
 
-\begin{table}[h]\centering\footnotesize
-\caption{Llama-3.2-3B vs.\ Qwen2.5-Coder-7B on AMD Vulkan hardware.}\label{tab:slm}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llll@{}}
+\begin{table}[t]\centering\footnotesize\setlength{\tabcolsep}{3pt}
+\caption{Llama-3.2-3B versus Qwen2.5-Coder-7B on AMD Vulkan hardware.}\label{tab:slm}%
+\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lrrr@{}}
 \toprule
 Metric & Llama-3.2-3B (Ablation) & Qwen2.5-Coder-7B & Gain \\
 \midrule
@@ -336,18 +438,20 @@ Mean Latency (ms) & 4162.2 & 6164.0 & +2002\,ms \\
 
 \begin{figure}[h]\centering
 \includegraphics[width=0.85\columnwidth]{fig_slm_scaling_ablation.pdf}
-\caption{Model-scaling trade-offs: syntax, hallucination, rejection, latency.}\label{fig:scaling}
+\caption{Model-scaling comparison between Llama-3.2-3B and Qwen2.5-Coder-7B across syntax validity, schema compliance, diagnostic accuracy, hallucination rate, and adversarial rejection.}\label{fig:scaling}
 \end{figure}
 
 %% ============================================================
+\FloatBarrier
 \section{Discussion and Limitations}\label{sec:disc}
-\textbf{Supported claims.} (i) Deterministic 3-layer verification removes 98.8\% of invalid executions; (ii) the benefit in recovery rate materialises only when $p_\text{hal}{\ge}0.20$; (iii) debate, graph encoder, and rollback showed no benefit or a cost in this setting; (iv) 7B scaling eliminates hallucinations but widens the latency gap.
+\paragraph{Supported observations} Our empirical results support four primary observations. First, deterministic three-layer verification removes 98.8\% of invalid executions, reducing executed invalid actions from 8.3\% to 0.1\%. Second, recovery-rate gains from verification emerge primarily when hallucination rates satisfy $p_\text{hal}\ge0.20$. Third, multi-role debate, graph encoding, and transactional rollback provided little measurable benefit in this benchmark. Fourth, scaling from 3B to 7B parameters reduced hallucinations from 23.0\% to 0.0\% but increased inference latency.
 
-\textbf{Threats.} (1) Fluid simulator omits TCP dynamics, understating reroute transients. (2) The digital twin assumes synchronised state with Gaussian noise $\sigma{=}0.03$. (3) 44\% fallback blends CL-ANM and rule-engine behaviour. (4) PPO is trained one-step bandit style. (5) Mininet emulation covers a subset of the cells; the remaining comparisons are simulation-only. (6) The assumed error model in the main experiment ($p_\text{diag}{=}0.85$, $p_\text{hal}{=}0.10$) differs substantially from measured values---the sensitivity analysis (Section~\ref{sec:results}) bounds the conclusions.
+\paragraph{Threats to validity} Several limitations apply to our findings. First, the fluid simulator omits TCP congestion dynamics, which may understate packet transients during rerouting. Second, the digital twin assumes synchronised state with Gaussian telemetry noise ($\sigma=0.03$). Third, rule fallback in 44\% of episodes blends CL-ANM behaviour with the static rule baseline. Fourth, PPO policy training uses a single-step formulation. Fifth, Mininet emulation covers a subset of benchmark cells. Finally, assumed error rates in the main experiment ($p_\text{diag}=0.85, p_\text{hal}=0.10$) differ from values measured on physical hardware; the sensitivity analysis in Section~\ref{sec:results} bounds these effects.
 
 %% ============================================================
+\FloatBarrier
 \section{Conclusion}\label{sec:conclusion}
-CL-ANM integrates SLM diagnosis, multi-role debate, GraphSAGE-PPO path selection, deterministic verification, and rollback in one controller. Verification delivers its safety benefit virtually eliminating invalid executions. The full loop is slower than simpler controllers under fast-cascading overloads, and three of its six ablated components showed no measurable benefit. Post-hoc CL-ANM-v2 demonstrates modest MTTR reduction (26.6\,s to 25.0\,s), though compound S5 recovery remains limited (20.0\%) by the 8\,s cascade horizon, establishing that pipelined execution and rapid reaction are both required for resilient autonomous networking. Model scaling eliminates hallucinations but underscores that formal verification remains necessary for semantic correctness.
+We evaluated CL-ANM, an architecture integrating language-model diagnosis, multi-role debate, graph reinforcement learning, deterministic verification, and transactional rollback for autonomous network management. Deterministic verification reduced invalid action executions across both simulation and emulation. However, the complete control loop incurred latency that impaired recovery during fast-cascading overloads, where simpler controllers responded more quickly. Ablations showed that debate, graph encoders, and transactional rollback provided little measurable benefit in our benchmark settings. An exploratory post-hoc variant with pipelined digital-twin execution reduced recovery time, though compound cascading failures remained challenging. Parameter scaling from 3B to 7B reduced device hallucinations but increased inference latency and conservative refusals. These findings suggest that language models in network control benefit from formal verification, but the verification pipeline must be structured to avoid reaction delays.
 
 \section*{Declarations}
 
@@ -379,14 +483,17 @@ CL-ANM integrates SLM diagnosis, multi-role debate, GraphSAGE-PPO path selection
 \end{thebibliography}
 
 %% ============================================================
+\FloatBarrier
 \begin{appendices}
-\section{Per-Cell Breakdown Tables}\label{secA1}
+\section{Per-Cell Breakdown and Extended Tables}\label{secA1}
 
-\begin{table*}[h]\centering\scriptsize
+\begin{table*}[h]\centering\scriptsize\setlength{\tabcolsep}{3pt}
 \caption{Per-cell recovery rate (\%) across all 12 topology $\times$ scenario cells (30 seeds each).}\label{tab:percell_rec}%
-\setlength{\tabcolsep}{2.5pt}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llrrrrrrrrrrr@{}}
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{llrrrrr@{\hspace{12pt}}rrrrrr}
 \toprule
+& & \multicolumn{5}{c}{\textbf{Baselines and Full Controller}} & \multicolumn{6}{c}{\textbf{Ablations A1--A6}} \\
+\cmidrule(lr){3-7}\cmidrule(lr){8-13}
 Topology & Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
 \midrule
 T1 Tree & S2 DDoS & 20.0 & 93.3 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
@@ -404,14 +511,17 @@ T3 Fat-tree & S3 Misconfig & 0.0 & 100.0 & 43.3 & 100.0 & 100.0 & 96.7 & 93.3 & 
 T3 Fat-tree & S4 Cascading & 0.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
 T3 Fat-tree & S5 Compound & 0.0 & 83.3 & 100.0 & 96.7 & 40.0 & 23.3 & 56.7 & 30.0 & 40.0 & 36.7 & 46.7 \\
 \bottomrule
-\end{tabular*}
+\end{tabular}
+\end{adjustbox}
 \end{table*}
 
-\begin{table*}[h]\centering\scriptsize
+\begin{table*}[h]\centering\scriptsize\setlength{\tabcolsep}{3pt}
 \caption{Per-cell MTTR (s, censored at 70\,s) across all 12 topology $\times$ scenario cells.}\label{tab:percell_mttr}%
-\setlength{\tabcolsep}{2.5pt}%
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}llrrrrrrrrrrr@{}}
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{llrrrrr@{\hspace{12pt}}rrrrrr}
 \toprule
+& & \multicolumn{5}{c}{\textbf{Baselines and Full Controller}} & \multicolumn{6}{c}{\textbf{Ablations A1--A6}} \\
+\cmidrule(lr){3-7}\cmidrule(lr){8-13}
 Topology & Scenario & B0 & B1 & B2 & B3 & FULL & A1 & A2 & A3 & A4 & A5 & A6 \\
 \midrule
 T1 Tree & S2 DDoS & 57.0 & 12.0 & 5.8 & 6.6 & 21.8 & 21.7 & 19.0 & 18.7 & 12.5 & 22.8 & 20.4 \\
@@ -429,7 +539,31 @@ T3 Fat-tree & S3 Misconfig & 70.0 & 9.3 & 42.3 & 6.0 & 17.0 & 16.1 & 18.9 & 16.5
 T3 Fat-tree & S4 Cascading & 70.0 & 12.8 & 6.0 & 6.0 & 19.2 & 25.7 & 14.4 & 21.9 & 15.8 & 19.7 & 17.9 \\
 T3 Fat-tree & S5 Compound & 70.0 & 25.4 & 9.3 & 11.7 & 53.4 & 63.1 & 44.4 & 59.0 & 48.0 & 51.9 & 49.7 \\
 \bottomrule
-\end{tabular*}
+\end{tabular}
+\end{adjustbox}
+\end{table*}
+
+\begin{table*}[h]\centering\scriptsize\setlength{\tabcolsep}{3pt}
+\caption{Full pooled benchmark performance metrics with 95\% bootstrap confidence intervals, TRT, availability, and controller latency across 3,960 episodes.}\label{tab:main_ci}%
+\begin{adjustbox}{max width=\textwidth,center}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Configuration & Recovered (\%) & MTTR (s) & TRT (s) & Loss (\%) & Avail. (\%) & p95 lat. (ms) & Ctl ms/ep \\
+\midrule
+B0 Unmanaged & 7.8 [5.3, 10.8] & 64.9 [63.1, 66.6] & 64.6 [62.6, 66.5] & 36.6 [34.1, 39.2] & 64.1 [62.0, 66.2] & 188.8 [172.6, 205.2] & 0 \\
+B1 Zero-shot LLM & 95.6 [93.3, 97.5] & 13.3 [12.1, 14.8] & 8.6 [7.1, 10.0] & 3.7 [3.0, 4.4] & 96.5 [95.9, 97.1] & 123.7 [116.1, 131.8] & 7 \\
+B2 Static rules & 79.2 [74.7, 83.3] & 19.9 [17.3, 22.6] & 16.0 [13.1, 19.0] & 7.4 [5.8, 9.2] & 94.0 [92.6, 95.3] & 100.7 [94.6, 107.3] & 11 \\
+B3 Single DQN & 95.6 [93.3, 97.5] & 9.7 [8.4, 11.0] & 4.9 [3.6, 6.5] & 2.8 [1.9, 3.8] & 97.6 [96.8, 98.2] & 112.9 [105.9, 120.4] & 11 \\
+CL-ANM (full) & 87.5 [84.2, 90.8] & 26.6 [24.7, 28.6] & 15.3 [13.1, 17.6] & 8.7 [7.3, 10.1] & 92.1 [90.9, 93.3] & 162.4 [151.9, 173.1] & 21 \\
+A1 w/o verification & 84.2 [80.6, 87.8] & 27.7 [25.6, 29.9] & 16.8 [14.4, 19.4] & 8.3 [6.9, 9.7] & 92.5 [91.4, 93.7] & 155.1 [144.7, 165.7] & 15 \\
+A2 w/o debate & 87.5 [83.9, 90.8] & 24.9 [22.7, 27.0] & 12.6 [10.4, 15.1] & 7.0 [5.7, 8.4] & 93.8 [92.7, 94.9] & 138.1 [128.2, 147.7] & 15 \\
+A3 w/o RL & 86.7 [83.1, 90.3] & 27.4 [25.3, 29.3] & 16.6 [14.4, 19.0] & 9.4 [7.9, 10.9] & 91.6 [90.3, 92.7] & 159.6 [149.5, 170.3] & 17 \\
+A4 w/o rollback & 88.1 [84.7, 91.4] & 19.4 [17.5, 21.5] & 15.0 [12.8, 17.3] & 8.5 [7.2, 9.9] & 92.2 [91.0, 93.4] & 161.3 [150.7, 172.6] & 23 \\
+A5 w/o graph enc. & 87.5 [84.2, 90.8] & 26.9 [24.9, 28.9] & 15.8 [13.9, 17.9] & 8.7 [7.3, 10.1] & 92.0 [90.8, 93.0] & 158.2 [147.1, 169.8] & 21 \\
+A6 debate always-on & 88.1 [84.4, 91.4] & 26.3 [24.3, 28.2] & 14.7 [12.6, 17.0] & 8.5 [7.1, 9.9] & 92.3 [91.1, 93.4] & 162.1 [151.1, 173.4] & 19 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
 \end{table*}
 
 \end{appendices}
